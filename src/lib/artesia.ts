@@ -131,22 +131,40 @@ export async function fetchFavoriteExhibitions() {
     .filter((e): e is Exhibition => Boolean(e));
 }
 
+/** Identifiant de l'utilisateur connecté, requis par les règles d'accès. */
+export async function requireUserId() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) throw new Error("Vous devez être connecté.");
+  return data.user.id;
+}
+
 export async function toggleFavorite(exhibitionId: string, isFavorite: boolean) {
+  const userId = await requireUserId();
   if (isFavorite) {
     const { error } = await supabase
       .from("favorites")
       .delete()
-      .eq("exhibition_id", exhibitionId);
+      .eq("exhibition_id", exhibitionId)
+      .eq("user_id", userId);
     if (error) throw error;
     return false;
   }
-  const { error } = await supabase.from("favorites").insert({ exhibition_id: exhibitionId });
+  const { error } = await supabase
+    .from("favorites")
+    .insert({ exhibition_id: exhibitionId, user_id: userId });
   if (error) throw error;
   return true;
 }
 
 export async function trackExhibitionView(exhibitionId: string) {
-  await supabase.from("exhibition_views").insert({ exhibition_id: exhibitionId });
+  try {
+    const userId = await requireUserId();
+    await supabase
+      .from("exhibition_views")
+      .insert({ exhibition_id: exhibitionId, user_id: userId });
+  } catch {
+    // La consultation est un signal secondaire : on ignore l'échec.
+  }
 }
 
 export async function fetchReservations() {
@@ -178,9 +196,10 @@ export type ReservationInput = {
 };
 
 export async function createReservation(input: ReservationInput) {
+  const userId = await requireUserId();
   const { data, error } = await supabase
     .from("reservations")
-    .insert(input)
+    .insert({ ...input, user_id: userId })
     .select("id")
     .single();
   if (error) throw error;
