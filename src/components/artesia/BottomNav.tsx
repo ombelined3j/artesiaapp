@@ -1,11 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { CalendarDays, Sparkles, Ticket, User } from "lucide-react";
+import { CalendarDays, Sparkles, Ticket } from "lucide-react";
 
 const items = [
   { to: "/upcoming", label: "À venir", icon: CalendarDays },
   { to: "/for-you", label: "Pour vous", icon: Sparkles },
   { to: "/tickets", label: "Tickets", icon: Ticket },
-  { to: "/profile", label: "Profil", icon: User },
 ] as const;
 
 export function BottomNav() {
