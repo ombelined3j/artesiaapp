@@ -1,24 +1,115 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { CalendarDays, Heart, Sparkles, Ticket } from "lucide-react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { Logo } from "@/components/artesia/Logo";
+import { Button } from "@/components/ui/button";
+
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Artesia — Les expositions de Paris, aujourd'hui et demain" },
+      {
+        name: "description",
+        content:
+          "Découvrez en un coup d'œil les expositions parisiennes du jour et du lendemain, recevez des recommandations et réservez votre visite.",
+      },
+      { property: "og:title", content: "Artesia — Les expositions de Paris" },
+      {
+        property: "og:description",
+        content:
+          "Un fil chronologique des expositions parisiennes : aujourd'hui, demain, et la réservation en quelques taps.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: Landing,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+const heroImage = "https://res.cloudinary.com/ncu7idmv/image/upload/f_auto,q_auto/A";
+
+function Landing() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background">
+      <header className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5">
+        <Logo />
+        <div className="flex items-center gap-2">
+          <Button asChild variant="ghost">
+            <Link to="/login">Se connecter</Link>
+          </Button>
+          <Button asChild>
+            <Link to="/signup">Créer un compte</Link>
+          </Button>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-5xl px-5">
+        <section className="grid items-center gap-10 py-10 md:grid-cols-2 md:py-16">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.2em] text-petrol uppercase">
+              Paris · Expositions
+            </p>
+            <h1 className="mt-4 text-4xl leading-tight md:text-5xl">
+              Ce qui se passe aujourd'hui, puis demain, dans les musées de Paris.
+            </h1>
+            <p className="mt-5 text-lg text-muted-foreground">
+              Artesia rassemble les expositions parisiennes dans un fil simple à parcourir.
+              Vous repérez une expo, vous la gardez d'un tap, vous réservez sans quitter
+              l'application.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild size="lg">
+                <Link to="/signup">Créer un compte</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link to="/login">Se connecter</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="overflow-hidden rounded-3xl bg-muted">
+            <img
+              src={heroImage}
+              alt="Visiteurs dans une salle d'exposition parisienne"
+              className="h-[380px] w-full object-cover md:h-[460px]"
+            />
+          </div>
+        </section>
+
+        <section className="grid gap-4 pb-16 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            {
+              icon: CalendarDays,
+              title: "Aujourd'hui / Demain",
+              text: "Un fil chronologique, avec les horaires, les prix et les derniers jours.",
+            },
+            {
+              icon: Sparkles,
+              title: "Pour vous",
+              text: "Des recommandations qui s'affinent selon vos favoris et vos visites.",
+            },
+            {
+              icon: Heart,
+              title: "Favoris en un tap",
+              text: "Gardez une exposition de côté depuis n'importe quelle carte.",
+            },
+            {
+              icon: Ticket,
+              title: "Réservation directe",
+              text: "Date, créneau, visiteurs : votre billet en quelques secondes.",
+            },
+          ].map(({ icon: Icon, title, text }) => (
+            <div key={title} className="rounded-2xl bg-card p-5">
+              <Icon className="h-5 w-5 text-primary" />
+              <h3 className="mt-3 text-lg">{title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+            </div>
+          ))}
+        </section>
+      </main>
+
+      <footer className="border-t px-5 py-6 text-center text-sm text-muted-foreground">
+        Artesia · Les expositions de Paris
+      </footer>
     </div>
   );
 }
