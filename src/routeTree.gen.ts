@@ -15,9 +15,14 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
 import { Route as AuthenticatedForYouRouteImport } from './routes/_authenticated/for-you'
+import { Route as AuthenticatedMapRouteImport } from './routes/_authenticated/map'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
 import { Route as AuthenticatedUpcomingRouteImport } from './routes/_authenticated/upcoming'
+import { Route as AuthenticatedExhibitionExhibitionIdRouteImport } from './routes/_authenticated/exhibition.$exhibitionId'
+import { Route as AuthenticatedReservationReservationIdRouteImport } from './routes/_authenticated/reservation.$reservationId'
+import { Route as AuthenticatedExhibitionExhibitionIdBookRouteImport } from './routes/_authenticated/exhibition.$exhibitionId.book'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -48,9 +53,19 @@ const AuthenticatedForYouRoute = AuthenticatedForYouRouteImport.update({
   path: '/for-you',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMapRoute = AuthenticatedMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTicketsRoute = AuthenticatedTicketsRouteImport.update({
@@ -63,6 +78,24 @@ const AuthenticatedUpcomingRoute = AuthenticatedUpcomingRouteImport.update({
   path: '/upcoming',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedExhibitionExhibitionIdRoute =
+  AuthenticatedExhibitionExhibitionIdRouteImport.update({
+    id: '/exhibition/$exhibitionId',
+    path: '/exhibition/$exhibitionId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReservationReservationIdRoute =
+  AuthenticatedReservationReservationIdRouteImport.update({
+    id: '/reservation/$reservationId',
+    path: '/reservation/$reservationId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedExhibitionExhibitionIdBookRoute =
+  AuthenticatedExhibitionExhibitionIdBookRouteImport.update({
+    id: '/book',
+    path: '/book',
+    getParentRoute: () => AuthenticatedExhibitionExhibitionIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -70,9 +103,14 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/for-you': typeof AuthenticatedForYouRoute
+  '/map': typeof AuthenticatedMapRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/search': typeof AuthenticatedSearchRoute
   '/tickets': typeof AuthenticatedTicketsRoute
   '/upcoming': typeof AuthenticatedUpcomingRoute
+  '/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
+  '/reservation/$reservationId': typeof AuthenticatedReservationReservationIdRoute
+  '/exhibition/$exhibitionId/book': typeof AuthenticatedExhibitionExhibitionIdBookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -80,9 +118,14 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/for-you': typeof AuthenticatedForYouRoute
+  '/map': typeof AuthenticatedMapRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/search': typeof AuthenticatedSearchRoute
   '/tickets': typeof AuthenticatedTicketsRoute
   '/upcoming': typeof AuthenticatedUpcomingRoute
+  '/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
+  '/reservation/$reservationId': typeof AuthenticatedReservationReservationIdRoute
+  '/exhibition/$exhibitionId/book': typeof AuthenticatedExhibitionExhibitionIdBookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -92,9 +135,14 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/for-you': typeof AuthenticatedForYouRoute
+  '/_authenticated/map': typeof AuthenticatedMapRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
   '/_authenticated/upcoming': typeof AuthenticatedUpcomingRoute
+  '/_authenticated/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
+  '/_authenticated/reservation/$reservationId': typeof AuthenticatedReservationReservationIdRoute
+  '/_authenticated/exhibition/$exhibitionId/book': typeof AuthenticatedExhibitionExhibitionIdBookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -104,9 +152,14 @@ export interface FileRouteTypes {
     | '/signup'
     | '/favorites'
     | '/for-you'
+    | '/map'
     | '/profile'
+    | '/search'
     | '/tickets'
     | '/upcoming'
+    | '/exhibition/$exhibitionId'
+    | '/reservation/$reservationId'
+    | '/exhibition/$exhibitionId/book'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -114,9 +167,14 @@ export interface FileRouteTypes {
     | '/signup'
     | '/favorites'
     | '/for-you'
+    | '/map'
     | '/profile'
+    | '/search'
     | '/tickets'
     | '/upcoming'
+    | '/exhibition/$exhibitionId'
+    | '/reservation/$reservationId'
+    | '/exhibition/$exhibitionId/book'
   id:
     | '__root__'
     | '/'
@@ -125,9 +183,14 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/favorites'
     | '/_authenticated/for-you'
+    | '/_authenticated/map'
     | '/_authenticated/profile'
+    | '/_authenticated/search'
     | '/_authenticated/tickets'
     | '/_authenticated/upcoming'
+    | '/_authenticated/exhibition/$exhibitionId'
+    | '/_authenticated/reservation/$reservationId'
+    | '/_authenticated/exhibition/$exhibitionId/book'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -181,11 +244,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedForYouRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/map': {
+      id: '/_authenticated/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof AuthenticatedMapRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/search': {
+      id: '/_authenticated/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AuthenticatedSearchRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tickets': {
@@ -202,23 +279,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUpcomingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/exhibition/$exhibitionId': {
+      id: '/_authenticated/exhibition/$exhibitionId'
+      path: '/exhibition/$exhibitionId'
+      fullPath: '/exhibition/$exhibitionId'
+      preLoaderRoute: typeof AuthenticatedExhibitionExhibitionIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reservation/$reservationId': {
+      id: '/_authenticated/reservation/$reservationId'
+      path: '/reservation/$reservationId'
+      fullPath: '/reservation/$reservationId'
+      preLoaderRoute: typeof AuthenticatedReservationReservationIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/exhibition/$exhibitionId/book': {
+      id: '/_authenticated/exhibition/$exhibitionId/book'
+      path: '/book'
+      fullPath: '/exhibition/$exhibitionId/book'
+      preLoaderRoute: typeof AuthenticatedExhibitionExhibitionIdBookRouteImport
+      parentRoute: typeof AuthenticatedExhibitionExhibitionIdRoute
+    }
   }
 }
+
+interface AuthenticatedExhibitionExhibitionIdRouteChildren {
+  AuthenticatedExhibitionExhibitionIdBookRoute: typeof AuthenticatedExhibitionExhibitionIdBookRoute
+}
+
+const AuthenticatedExhibitionExhibitionIdRouteChildren: AuthenticatedExhibitionExhibitionIdRouteChildren =
+  {
+    AuthenticatedExhibitionExhibitionIdBookRoute:
+      AuthenticatedExhibitionExhibitionIdBookRoute,
+  }
+
+const AuthenticatedExhibitionExhibitionIdRouteWithChildren =
+  AuthenticatedExhibitionExhibitionIdRoute._addFileChildren(
+    AuthenticatedExhibitionExhibitionIdRouteChildren,
+  )
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
   AuthenticatedForYouRoute: typeof AuthenticatedForYouRoute
+  AuthenticatedMapRoute: typeof AuthenticatedMapRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
   AuthenticatedUpcomingRoute: typeof AuthenticatedUpcomingRoute
+  AuthenticatedExhibitionExhibitionIdRoute: typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
+  AuthenticatedReservationReservationIdRoute: typeof AuthenticatedReservationReservationIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
   AuthenticatedForYouRoute: AuthenticatedForYouRoute,
+  AuthenticatedMapRoute: AuthenticatedMapRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedSearchRoute: AuthenticatedSearchRoute,
   AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
   AuthenticatedUpcomingRoute: AuthenticatedUpcomingRoute,
+  AuthenticatedExhibitionExhibitionIdRoute:
+    AuthenticatedExhibitionExhibitionIdRouteWithChildren,
+  AuthenticatedReservationReservationIdRoute:
+    AuthenticatedReservationReservationIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
