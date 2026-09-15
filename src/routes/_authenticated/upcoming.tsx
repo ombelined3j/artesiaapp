@@ -126,11 +126,18 @@ function UpcomingPage() {
     <AppShell>
       <header className="mb-4 flex items-center justify-between">
         <Logo />
-        <Button asChild variant="ghost" size="icon" aria-label="Rechercher">
-          <Link to="/search">
-            <Search className="h-5 w-5" />
-          </Link>
-        </Button>
+        <div className="flex items-center">
+          <Button asChild variant="ghost" size="icon" aria-label="Rechercher">
+            <Link to="/search">
+              <Search className="h-5 w-5" />
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" size="icon" aria-label="Mon profil">
+            <Link to="/profile">
+              <User className="h-5 w-5" />
+            </Link>
+          </Button>
+        </div>
       </header>
 
       <FilterBar types={types} moods={moods} filters={filters} onChange={setFilters} />
