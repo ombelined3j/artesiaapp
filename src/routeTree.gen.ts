@@ -10,33 +10,194 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
+import { Route as AuthenticatedForYouRouteImport } from './routes/_authenticated/for-you'
+import { Route as AuthenticatedMapRouteImport } from './routes/_authenticated/map'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
+import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
+import { Route as AuthenticatedUpcomingRouteImport } from './routes/_authenticated/upcoming'
+import { Route as AuthenticatedExhibitionExhibitionIdRouteImport } from './routes/_authenticated/exhibition.$exhibitionId'
+import { Route as AuthenticatedReservationReservationIdRouteImport } from './routes/_authenticated/reservation.$reservationId'
+import { Route as AuthenticatedExhibitionExhibitionIdBookRouteImport } from './routes/_authenticated/exhibition.$exhibitionId.book'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedFavoritesRoute = AuthenticatedFavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedForYouRoute = AuthenticatedForYouRouteImport.update({
+  id: '/for-you',
+  path: '/for-you',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMapRoute = AuthenticatedMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTicketsRoute = AuthenticatedTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedUpcomingRoute = AuthenticatedUpcomingRouteImport.update({
+  id: '/upcoming',
+  path: '/upcoming',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedExhibitionExhibitionIdRoute =
+  AuthenticatedExhibitionExhibitionIdRouteImport.update({
+    id: '/exhibition/$exhibitionId',
+    path: '/exhibition/$exhibitionId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReservationReservationIdRoute =
+  AuthenticatedReservationReservationIdRouteImport.update({
+    id: '/reservation/$reservationId',
+    path: '/reservation/$reservationId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedExhibitionExhibitionIdBookRoute =
+  AuthenticatedExhibitionExhibitionIdBookRouteImport.update({
+    id: '/book',
+    path: '/book',
+    getParentRoute: () => AuthenticatedExhibitionExhibitionIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/favorites': typeof AuthenticatedFavoritesRoute
+  '/for-you': typeof AuthenticatedForYouRoute
+  '/map': typeof AuthenticatedMapRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/search': typeof AuthenticatedSearchRoute
+  '/tickets': typeof AuthenticatedTicketsRoute
+  '/upcoming': typeof AuthenticatedUpcomingRoute
+  '/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
+  '/reservation/$reservationId': typeof AuthenticatedReservationReservationIdRoute
+  '/exhibition/$exhibitionId/book': typeof AuthenticatedExhibitionExhibitionIdBookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/favorites': typeof AuthenticatedFavoritesRoute
+  '/for-you': typeof AuthenticatedForYouRoute
+  '/map': typeof AuthenticatedMapRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/search': typeof AuthenticatedSearchRoute
+  '/tickets': typeof AuthenticatedTicketsRoute
+  '/upcoming': typeof AuthenticatedUpcomingRoute
+  '/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
+  '/reservation/$reservationId': typeof AuthenticatedReservationReservationIdRoute
+  '/exhibition/$exhibitionId/book': typeof AuthenticatedExhibitionExhibitionIdBookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
+  '/_authenticated/for-you': typeof AuthenticatedForYouRoute
+  '/_authenticated/map': typeof AuthenticatedMapRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
+  '/_authenticated/upcoming': typeof AuthenticatedUpcomingRoute
+  '/_authenticated/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
+  '/_authenticated/reservation/$reservationId': typeof AuthenticatedReservationReservationIdRoute
+  '/_authenticated/exhibition/$exhibitionId/book': typeof AuthenticatedExhibitionExhibitionIdBookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/favorites'
+    | '/for-you'
+    | '/map'
+    | '/profile'
+    | '/search'
+    | '/tickets'
+    | '/upcoming'
+    | '/exhibition/$exhibitionId'
+    | '/reservation/$reservationId'
+    | '/exhibition/$exhibitionId/book'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/favorites'
+    | '/for-you'
+    | '/map'
+    | '/profile'
+    | '/search'
+    | '/tickets'
+    | '/upcoming'
+    | '/exhibition/$exhibitionId'
+    | '/reservation/$reservationId'
+    | '/exhibition/$exhibitionId/book'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/login'
+    | '/signup'
+    | '/_authenticated/favorites'
+    | '/_authenticated/for-you'
+    | '/_authenticated/map'
+    | '/_authenticated/profile'
+    | '/_authenticated/search'
+    | '/_authenticated/tickets'
+    | '/_authenticated/upcoming'
+    | '/_authenticated/exhibition/$exhibitionId'
+    | '/_authenticated/reservation/$reservationId'
+    | '/_authenticated/exhibition/$exhibitionId/book'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +209,149 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/favorites': {
+      id: '/_authenticated/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof AuthenticatedFavoritesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/for-you': {
+      id: '/_authenticated/for-you'
+      path: '/for-you'
+      fullPath: '/for-you'
+      preLoaderRoute: typeof AuthenticatedForYouRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/map': {
+      id: '/_authenticated/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof AuthenticatedMapRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/search': {
+      id: '/_authenticated/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AuthenticatedSearchRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tickets': {
+      id: '/_authenticated/tickets'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof AuthenticatedTicketsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/upcoming': {
+      id: '/_authenticated/upcoming'
+      path: '/upcoming'
+      fullPath: '/upcoming'
+      preLoaderRoute: typeof AuthenticatedUpcomingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/exhibition/$exhibitionId': {
+      id: '/_authenticated/exhibition/$exhibitionId'
+      path: '/exhibition/$exhibitionId'
+      fullPath: '/exhibition/$exhibitionId'
+      preLoaderRoute: typeof AuthenticatedExhibitionExhibitionIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reservation/$reservationId': {
+      id: '/_authenticated/reservation/$reservationId'
+      path: '/reservation/$reservationId'
+      fullPath: '/reservation/$reservationId'
+      preLoaderRoute: typeof AuthenticatedReservationReservationIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/exhibition/$exhibitionId/book': {
+      id: '/_authenticated/exhibition/$exhibitionId/book'
+      path: '/book'
+      fullPath: '/exhibition/$exhibitionId/book'
+      preLoaderRoute: typeof AuthenticatedExhibitionExhibitionIdBookRouteImport
+      parentRoute: typeof AuthenticatedExhibitionExhibitionIdRoute
+    }
   }
 }
 
+interface AuthenticatedExhibitionExhibitionIdRouteChildren {
+  AuthenticatedExhibitionExhibitionIdBookRoute: typeof AuthenticatedExhibitionExhibitionIdBookRoute
+}
+
+const AuthenticatedExhibitionExhibitionIdRouteChildren: AuthenticatedExhibitionExhibitionIdRouteChildren =
+  {
+    AuthenticatedExhibitionExhibitionIdBookRoute:
+      AuthenticatedExhibitionExhibitionIdBookRoute,
+  }
+
+const AuthenticatedExhibitionExhibitionIdRouteWithChildren =
+  AuthenticatedExhibitionExhibitionIdRoute._addFileChildren(
+    AuthenticatedExhibitionExhibitionIdRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
+  AuthenticatedForYouRoute: typeof AuthenticatedForYouRoute
+  AuthenticatedMapRoute: typeof AuthenticatedMapRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
+  AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
+  AuthenticatedUpcomingRoute: typeof AuthenticatedUpcomingRoute
+  AuthenticatedExhibitionExhibitionIdRoute: typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
+  AuthenticatedReservationReservationIdRoute: typeof AuthenticatedReservationReservationIdRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
+  AuthenticatedForYouRoute: AuthenticatedForYouRoute,
+  AuthenticatedMapRoute: AuthenticatedMapRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedSearchRoute: AuthenticatedSearchRoute,
+  AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
+  AuthenticatedUpcomingRoute: AuthenticatedUpcomingRoute,
+  AuthenticatedExhibitionExhibitionIdRoute:
+    AuthenticatedExhibitionExhibitionIdRouteWithChildren,
+  AuthenticatedReservationReservationIdRoute:
+    AuthenticatedReservationReservationIdRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

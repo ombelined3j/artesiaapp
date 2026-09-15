@@ -1,0 +1,83 @@
+import { Link } from "@tanstack/react-router";
+import { Heart, MapPin } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { formatTime, priceLabel, statusLabel, type Exhibition } from "@/lib/artesia";
+
+type Props = {
+  exhibition: Exhibition;
+  day?: string;
+  isFavorite: boolean;
+  onToggleFavorite: (id: string) => void;
+};
+
+export function ExhibitionCard({ exhibition, day, isFavorite, onToggleFavorite }: Props) {
+  const status = day ? statusLabel(exhibition, day) : null;
+  const hours = formatTime(exhibition.opening_time);
+  const closing = formatTime(exhibition.closing_time);
+
+  return (
+    <div className="group relative flex gap-4 rounded-2xl bg-card p-3 transition-shadow hover:shadow-[0_8px_24px_-16px_var(--ink)]">
+      <Link
+        to="/exhibition/$exhibitionId"
+        params={{ exhibitionId: exhibition.id }}
+        className="flex min-w-0 flex-1 gap-4"
+      >
+        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-muted sm:h-28 sm:w-28">
+          {exhibition.image_url ? (
+            <img
+              src={exhibition.image_url}
+              alt={exhibition.title}
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+          ) : null}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate text-base font-medium">{exhibition.title}</h3>
+          <p className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
+            {exhibition.museums?.name}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {hours ? (
+              <span className="text-foreground">
+                {hours}
+                {closing ? ` – ${closing}` : ""}
+              </span>
+            ) : null}
+            {hours ? " · " : ""}
+            <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
+              {priceLabel(exhibition)}
+            </span>
+          </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {status ? (
+              <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-medium text-gold-foreground">
+                {status}
+              </span>
+            ) : null}
+            {exhibition.exhibition_type ? (
+              <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
+                {exhibition.exhibition_type}
+              </span>
+            ) : null}
+            {exhibition.mood ? (
+              <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
+                {exhibition.mood}
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </Link>
+      <button
+        type="button"
+        aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+        onClick={() => onToggleFavorite(exhibition.id)}
+        className="self-start rounded-full p-2 text-muted-foreground transition-colors hover:text-primary"
+      >
+        <Heart className={cn("h-5 w-5", isFavorite && "fill-primary text-primary")} />
+      </button>
+    </div>
+  );
+}

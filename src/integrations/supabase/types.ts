@@ -14,7 +14,242 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      exhibition_views: {
+        Row: {
+          created_at: string
+          exhibition_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          exhibition_id: string
+          id?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          exhibition_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exhibition_views_exhibition_id_fkey"
+            columns: ["exhibition_id"]
+            isOneToOne: false
+            referencedRelation: "exhibitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exhibitions: {
+        Row: {
+          bookable: boolean
+          booking_url: string | null
+          closing_time: string | null
+          created_at: string
+          description: string | null
+          end_date: string
+          exhibition_type: string | null
+          id: string
+          image_url: string | null
+          is_free: boolean
+          mood: string | null
+          museum_id: string
+          opening_time: string | null
+          popularity: number
+          price: number
+          start_date: string
+          title: string
+        }
+        Insert: {
+          bookable?: boolean
+          booking_url?: string | null
+          closing_time?: string | null
+          created_at?: string
+          description?: string | null
+          end_date: string
+          exhibition_type?: string | null
+          id?: string
+          image_url?: string | null
+          is_free?: boolean
+          mood?: string | null
+          museum_id: string
+          opening_time?: string | null
+          popularity?: number
+          price?: number
+          start_date: string
+          title: string
+        }
+        Update: {
+          bookable?: boolean
+          booking_url?: string | null
+          closing_time?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string
+          exhibition_type?: string | null
+          id?: string
+          image_url?: string | null
+          is_free?: boolean
+          mood?: string | null
+          museum_id?: string
+          opening_time?: string | null
+          popularity?: number
+          price?: number
+          start_date?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exhibitions_museum_id_fkey"
+            columns: ["museum_id"]
+            isOneToOne: false
+            referencedRelation: "museums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          exhibition_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          exhibition_id: string
+          id?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          exhibition_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_exhibition_id_fkey"
+            columns: ["exhibition_id"]
+            isOneToOne: false
+            referencedRelation: "exhibitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      museums: {
+        Row: {
+          address: string
+          created_at: string
+          district: string | null
+          id: string
+          image_url: string | null
+          latitude: number | null
+          longitude: number | null
+          name: string
+          website_url: string | null
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          district?: string | null
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          website_url?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          district?: string | null
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reservations: {
+        Row: {
+          booking_reference: string
+          created_at: string
+          date: string
+          exhibition_id: string
+          id: string
+          number_of_visitors: number
+          status: string
+          ticket_type: string
+          time_slot: string
+          total_price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_reference?: string
+          created_at?: string
+          date: string
+          exhibition_id: string
+          id?: string
+          number_of_visitors?: number
+          status?: string
+          ticket_type?: string
+          time_slot: string
+          total_price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          booking_reference?: string
+          created_at?: string
+          date?: string
+          exhibition_id?: string
+          id?: string
+          number_of_visitors?: number
+          status?: string
+          ticket_type?: string
+          time_slot?: string
+          total_price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_exhibition_id_fkey"
+            columns: ["exhibition_id"]
+            isOneToOne: false
+            referencedRelation: "exhibitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
