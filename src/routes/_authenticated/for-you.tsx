@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { User } from "lucide-react";
 
 import { AppShell, ErrorState, LoadingList, SectionTitle } from "@/components/artesia/AppShell";
 import { ExhibitionCard } from "@/components/artesia/ExhibitionCard";
@@ -58,6 +59,11 @@ function ForYouPage() {
   return (
     <AppShell>
       <header className="mb-6">
+        <div className="mb-2 flex items-center justify-end">
+          <Link to="/profile" aria-label="Mon profil" className="rounded-full border p-2">
+            <User className="h-5 w-5" />
+          </Link>
+        </div>
         <h1 className="text-3xl">Bonjour{firstName ? ` ${firstName}` : ""}</h1>
         <p className="mt-1 text-muted-foreground">
           {hasHistory
