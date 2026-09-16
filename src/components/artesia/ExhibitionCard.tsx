@@ -2,7 +2,13 @@ import { Link } from "@tanstack/react-router";
 import { Heart, MapPin } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { formatTime, priceLabel, statusLabel, type Exhibition } from "@/lib/artesia";
+import {
+  dateRangeLabel,
+  formatTime,
+  priceLabel,
+  statusLabel,
+  type Exhibition,
+} from "@/lib/artesia";
 
 type Props = {
   exhibition: Exhibition;
@@ -23,6 +29,7 @@ export function ExhibitionCard({
   const status = day ? statusLabel(exhibition, day) : null;
   const hours = formatTime(exhibition.opening_time);
   const closing = formatTime(exhibition.closing_time);
+  const dates = day ? dateRangeLabel(exhibition, day) : null;
   const poster = variant === "poster";
 
   return (
