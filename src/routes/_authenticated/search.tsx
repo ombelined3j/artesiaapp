@@ -1,8 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { CalendarDays, MapPin, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { AppShell, EmptyState, ErrorState, LoadingList } from "@/components/artesia/AppShell";
+import {
+  AppShell,
+  EmptyState,
+  ErrorState,
+  LoadingList,
+  SectionTitle,
+} from "@/components/artesia/AppShell";
 import { ExhibitionCard } from "@/components/artesia/ExhibitionCard";
 import { Input } from "@/components/ui/input";
 import {
