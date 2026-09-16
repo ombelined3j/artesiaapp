@@ -9,21 +9,42 @@ type Props = {
   day?: string;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
+  /** "poster" affiche une grande affiche verticale, sans fond de carte. */
+  variant?: "default" | "poster";
 };
 
-export function ExhibitionCard({ exhibition, day, isFavorite, onToggleFavorite }: Props) {
+export function ExhibitionCard({
+  exhibition,
+  day,
+  isFavorite,
+  onToggleFavorite,
+  variant = "default",
+}: Props) {
   const status = day ? statusLabel(exhibition, day) : null;
   const hours = formatTime(exhibition.opening_time);
   const closing = formatTime(exhibition.closing_time);
+  const poster = variant === "poster";
 
   return (
-    <div className="group relative flex gap-4 rounded-2xl bg-card p-3 transition-shadow hover:shadow-[0_8px_24px_-16px_var(--ink)]">
+    <div
+      className={cn(
+        "group relative flex gap-4",
+        poster
+          ? "items-start py-1"
+          : "rounded-2xl bg-card p-3 transition-shadow hover:shadow-[0_8px_24px_-16px_var(--ink)]",
+      )}
+    >
       <Link
         to="/exhibition/$exhibitionId"
         params={{ exhibitionId: exhibition.id }}
         className="flex min-w-0 flex-1 gap-4"
       >
-        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-muted sm:h-28 sm:w-28">
+        <div
+          className={cn(
+            "shrink-0 overflow-hidden rounded-xl bg-muted",
+            poster ? "aspect-[3/4] w-28" : "h-24 w-24 sm:h-28 sm:w-28",
+          )}
+        >
           {exhibition.image_url ? (
             <img
               src={exhibition.image_url}
@@ -33,37 +54,72 @@ export function ExhibitionCard({ exhibition, day, isFavorite, onToggleFavorite }
             />
           ) : null}
         </div>
-        <div className="min-w-0 flex-1">
-          <h3 className="truncate text-base font-medium">{exhibition.title}</h3>
-          <p className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground">
-            <MapPin className="h-3.5 w-3.5 shrink-0" />
-            {exhibition.museums?.name}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {hours ? (
-              <span className="text-foreground">
-                {hours}
-                {closing ? ` – ${closing}` : ""}
+        <div className={cn("min-w-0 flex-1", poster && "pt-1")}>
+          <h3
+            className={cn(
+              "truncate",
+              poster ? "text-lg font-semibold" : "text-base font-medium",
+            )}
+          >
+            {exhibition.title}
+          </h3>
+          {poster ? (
+            <p className="mt-1.5 truncate text-sm text-muted-foreground">
+              {hours ? (
+                <span className="font-medium text-primary">
+                  {hours}
+                  {closing ? ` – ${closing}` : ""}
+                </span>
+              ) : null}
+              {hours ? " · " : ""}
+              <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
+                {priceLabel(exhibition)}
               </span>
-            ) : null}
-            {hours ? " · " : ""}
-            <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
-              {priceLabel(exhibition)}
-            </span>
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
+              {exhibition.museums?.name ? ` · ${exhibition.museums.name}` : ""}
+            </p>
+          ) : (
+            <>
+              <p className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5 shrink-0" />
+                {exhibition.museums?.name}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {hours ? (
+                  <span className="text-foreground">
+                    {hours}
+                    {closing ? ` – ${closing}` : ""}
+                  </span>
+                ) : null}
+                {hours ? " · " : ""}
+                <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
+                  {priceLabel(exhibition)}
+                </span>
+              </p>
+            </>
+          )}
+          <div className={cn("flex flex-wrap gap-1.5", poster ? "mt-2.5" : "mt-2")}>
             {status ? (
               <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-medium text-gold-foreground">
                 {status}
               </span>
             ) : null}
             {exhibition.exhibition_type ? (
-              <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
+              <span
+                className={cn(
+                  "rounded-full border text-xs text-muted-foreground",
+                  poster ? "px-3 py-1" : "px-2 py-0.5",
+                )}
+              >
                 {exhibition.exhibition_type}
               </span>
             ) : null}
             {exhibition.mood ? (
-              <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
+              <span
+                className={cn(
+                  "rounded-full border text-xs text-muted-foreground",
+                  poster ? "px-3 py-1" : "px-2 py-0.5",
+                )}
+              >
                 {exhibition.mood}
               </span>
             ) : null}
