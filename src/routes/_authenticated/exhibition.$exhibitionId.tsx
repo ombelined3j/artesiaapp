@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ExternalLink, Heart, MapPin } from "lucide-react";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { ArrowLeft, CalendarDays, Clock, ExternalLink, Heart, Landmark, MapPin, Share2 } from "lucide-react";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
-import { AppShell, EmptyState, ErrorState, LoadingList } from "@/components/artesia/AppShell";
+import { EmptyState, ErrorState, LoadingList, SectionTitle } from "@/components/artesia/AppShell";
+import { BottomNav } from "@/components/artesia/BottomNav";
+import { MuseumMap } from "@/components/artesia/MuseumMap";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/use-favorites";
 import {
@@ -35,8 +38,24 @@ export const Route = createFileRoute("/_authenticated/exhibition/$exhibitionId")
   component: ExhibitionDetail,
 });
 
+function InfoRow({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-4 border-b py-4 last:border-b-0">
+      <span className="text-muted-foreground">{icon}</span>
+      <div className="min-w-0 flex-1 text-[15px]">{children}</div>
+    </div>
+  );
+}
+
 function ExhibitionDetail() {
   const { exhibitionId } = Route.useParams();
+  const router = useRouter();
   const { isFavorite, toggle } = useFavorites();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["exhibition", exhibitionId],
@@ -47,98 +66,136 @@ function ExhibitionDetail() {
     void trackExhibitionView(exhibitionId);
   }, [exhibitionId]);
 
-  return (
-    <AppShell>
-      <Button asChild variant="ghost" size="sm" className="mb-3 -ml-2">
-        <Link to="/upcoming">
-          <ArrowLeft className="mr-1 h-4 w-4" /> Retour
-        </Link>
-      </Button>
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: data?.title ?? "Artesia", url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      toast.success("Lien copié");
+    } catch {
+      /* partage annulé */
+    }
+  };
 
-      {isError ? (
-        <ErrorState />
-      ) : isLoading ? (
-        <LoadingList count={1} />
-      ) : !data ? (
-        <EmptyState title="Exposition introuvable" />
-      ) : (
-        <article>
-          <div className="overflow-hidden rounded-3xl bg-muted">
-            {data.image_url ? (
+  const favorite = data ? isFavorite(data.id) : false;
+
+  return (
+    <div className="min-h-screen bg-background pb-40">
+      <div className="mx-auto max-w-2xl">
+        <div className="relative">
+          <div className="aspect-[4/3] w-full overflow-hidden bg-muted sm:aspect-[16/9] sm:rounded-b-3xl">
+            {data?.image_url ? (
               <img
                 src={data.image_url}
                 alt={data.title}
-                className="h-64 w-full object-cover sm:h-80"
+                className="h-full w-full object-cover"
               />
             ) : null}
           </div>
-
-          <div className="mt-5 flex items-start justify-between gap-3">
-            <h1 className="text-3xl leading-tight">{data.title}</h1>
+          <div className="absolute inset-x-4 top-4 flex items-center justify-between">
             <button
               type="button"
-              aria-label={isFavorite(data.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
-              onClick={() => toggle(data.id)}
-              className="shrink-0 rounded-full border p-2.5"
+              aria-label="Retour"
+              onClick={() => router.history.back()}
+              className="rounded-full bg-background/85 p-2.5 shadow-sm backdrop-blur"
             >
-              <Heart
-                className={cn("h-5 w-5", isFavorite(data.id) && "fill-primary text-primary")}
-              />
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Partager"
+              onClick={() => void handleShare()}
+              className="rounded-full bg-background/85 p-2.5 shadow-sm backdrop-blur"
+            >
+              <Share2 className="h-5 w-5" />
             </button>
           </div>
+        </div>
 
-          <p className="mt-2 flex items-center gap-1.5 text-muted-foreground">
-            <MapPin className="h-4 w-4" />
-            {data.museums?.name}
-          </p>
-          <p className="text-sm text-muted-foreground">{data.museums?.address}</p>
+        <div className="px-4 pt-5">
+          {isError ? (
+            <ErrorState />
+          ) : isLoading ? (
+            <LoadingList count={1} />
+          ) : !data ? (
+            <EmptyState title="Exposition introuvable" />
+          ) : (
+            <article>
+              <h1 className="text-3xl leading-tight">{data.title}</h1>
+              <p className="mt-1 text-lg text-muted-foreground">{data.museums?.name}</p>
 
-          {data.description ? <p className="mt-5 leading-relaxed">{data.description}</p> : null}
+              <button
+                type="button"
+                onClick={() => toggle(data.id)}
+                className={cn(
+                  "mt-5 inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold tracking-wide uppercase transition-colors",
+                  favorite ? "border-primary bg-primary/10 text-primary" : "bg-card",
+                )}
+              >
+                <Heart className={cn("h-4 w-4", favorite && "fill-primary")} />
+                {favorite ? "Favori" : "Ajouter aux favoris"}
+              </button>
 
-          <dl className="mt-6 grid grid-cols-2 gap-4 rounded-2xl bg-card p-4 text-sm">
-            <div>
-              <dt className="text-muted-foreground">Début</dt>
-              <dd>{formatDateFr(data.start_date)}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Fin</dt>
-              <dd>{formatDateFr(data.end_date)}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Horaires</dt>
-              <dd>
-                {formatTime(data.opening_time) ?? "—"}
-                {data.closing_time ? ` – ${formatTime(data.closing_time)}` : ""}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Tarif</dt>
-              <dd className={cn(data.is_free && "text-petrol font-medium")}>
-                {priceLabel(data)}
-              </dd>
-            </div>
-            {data.exhibition_type ? (
-              <div>
-                <dt className="text-muted-foreground">Type</dt>
-                <dd>{data.exhibition_type}</dd>
+              <div className="mt-6">
+                <InfoRow icon={<CalendarDays className="h-5 w-5" />}>
+                  <span className="text-primary">Du {formatDateFr(data.start_date)}</span>{" "}
+                  <span className="text-muted-foreground">au</span>{" "}
+                  {formatDateFr(data.end_date)}
+                </InfoRow>
+                <InfoRow icon={<Clock className="h-5 w-5" />}>
+                  {formatTime(data.opening_time) ?? "Horaires à confirmer"}
+                  {data.closing_time ? ` – ${formatTime(data.closing_time)}` : ""}
+                </InfoRow>
+                <InfoRow icon={<Landmark className="h-5 w-5" />}>{data.museums?.name}</InfoRow>
+                {data.museums?.address ? (
+                  <InfoRow icon={<MapPin className="h-5 w-5" />}>{data.museums.address}</InfoRow>
+                ) : null}
               </div>
-            ) : null}
-            {data.mood ? (
-              <div>
-                <dt className="text-muted-foreground">Ambiance</dt>
-                <dd>{data.mood}</dd>
-              </div>
-            ) : null}
-          </dl>
 
-          <div className="mt-6">
+              {data.description ? (
+                <section className="mt-8">
+                  <SectionTitle>Description</SectionTitle>
+                  <p className="leading-relaxed whitespace-pre-line">{data.description}</p>
+                </section>
+              ) : null}
+
+              {data.exhibition_type || data.mood ? (
+                <section className="mt-8">
+                  <SectionTitle>Ambiance</SectionTitle>
+                  <div className="flex flex-wrap gap-2">
+                    {data.exhibition_type ? (
+                      <span className="rounded-full border px-4 py-2 text-sm">
+                        {data.exhibition_type}
+                      </span>
+                    ) : null}
+                    {data.mood ? (
+                      <span className="rounded-full border px-4 py-2 text-sm">{data.mood}</span>
+                    ) : null}
+                  </div>
+                </section>
+              ) : null}
+
+              {data.museums ? (
+                <section className="mt-8">
+                  <SectionTitle>Lieu</SectionTitle>
+                  <MuseumMap museum={data.museums} />
+                </section>
+              ) : null}
+            </article>
+          )}
+        </div>
+      </div>
+
+      {data ? (
+        <div className="fixed inset-x-0 bottom-16 z-40 border-t bg-background/95 px-4 py-3 backdrop-blur">
+          <div className="mx-auto max-w-2xl">
             {data.bookable ? (
               <Button asChild size="lg" className="w-full">
-                <Link
-                  to="/exhibition/$exhibitionId/book"
-                  params={{ exhibitionId: data.id }}
-                >
-                  Réserver
+                <Link to="/exhibition/$exhibitionId/book" params={{ exhibitionId: data.id }}>
+                  Réserver — {priceLabel(data)}
                 </Link>
               </Button>
             ) : data.booking_url ? (
@@ -150,12 +207,14 @@ function ExhibitionDetail() {
               </Button>
             ) : (
               <p className="text-center text-sm text-muted-foreground">
-                Réservation non disponible pour cette exposition.
+                Réservation non disponible — {priceLabel(data)}
               </p>
             )}
           </div>
-        </article>
-      )}
-    </AppShell>
+        </div>
+      ) : null}
+
+      <BottomNav />
+    </div>
   );
 }
