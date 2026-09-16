@@ -29,7 +29,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { useFavorites } from "@/hooks/use-favorites";
 import { cn } from "@/lib/utils";
 import { fetchAllExhibitions, formatDayShort, isoDate } from "@/lib/artesia";
 
@@ -72,7 +71,6 @@ function mondayOf(date: Date) {
 
 function SearchPage() {
   const today = isoDate(0);
-  const { isFavorite, toggle } = useFavorites();
 
   const [district, setDistrict] = useState("all");
   const [date, setDate] = useState<string | null>(null);
@@ -367,8 +365,6 @@ function SearchPage() {
                     exhibition={exhibition}
                     day={date ?? today}
                     variant="poster"
-                    isFavorite={isFavorite(exhibition.id)}
-                    onToggleFavorite={toggle}
                   />
                 </div>
               ))}

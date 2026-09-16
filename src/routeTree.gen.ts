@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
-import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
 import { Route as AuthenticatedForYouRouteImport } from './routes/_authenticated/for-you'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
@@ -41,11 +40,6 @@ const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedFavoritesRoute = AuthenticatedFavoritesRouteImport.update({
-  id: '/favorites',
-  path: '/favorites',
-  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedForYouRoute = AuthenticatedForYouRouteImport.update({
   id: '/for-you',
@@ -95,7 +89,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/favorites': typeof AuthenticatedFavoritesRoute
   '/for-you': typeof AuthenticatedForYouRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/search': typeof AuthenticatedSearchRoute
@@ -109,7 +102,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/favorites': typeof AuthenticatedFavoritesRoute
   '/for-you': typeof AuthenticatedForYouRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/search': typeof AuthenticatedSearchRoute
@@ -125,7 +117,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/for-you': typeof AuthenticatedForYouRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
@@ -141,7 +132,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
-    | '/favorites'
     | '/for-you'
     | '/profile'
     | '/search'
@@ -155,7 +145,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
-    | '/favorites'
     | '/for-you'
     | '/profile'
     | '/search'
@@ -170,7 +159,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/login'
     | '/signup'
-    | '/_authenticated/favorites'
     | '/_authenticated/for-you'
     | '/_authenticated/profile'
     | '/_authenticated/search'
@@ -217,13 +205,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/favorites': {
-      id: '/_authenticated/favorites'
-      path: '/favorites'
-      fullPath: '/favorites'
-      preLoaderRoute: typeof AuthenticatedFavoritesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/for-you': {
       id: '/_authenticated/for-you'
@@ -300,7 +281,6 @@ const AuthenticatedExhibitionExhibitionIdRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
   AuthenticatedForYouRoute: typeof AuthenticatedForYouRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
@@ -311,7 +291,6 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
   AuthenticatedForYouRoute: AuthenticatedForYouRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,

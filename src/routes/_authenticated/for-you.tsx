@@ -4,7 +4,6 @@ import { User } from "lucide-react";
 
 import { AppShell, ErrorState, LoadingList, SectionTitle } from "@/components/artesia/AppShell";
 import { ExhibitionCard } from "@/components/artesia/ExhibitionCard";
-import { useFavorites } from "@/hooks/use-favorites";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchAllExhibitions, fetchSignals, isoDate, recommend } from "@/lib/artesia";
 
@@ -14,7 +13,7 @@ export const Route = createFileRoute("/_authenticated/for-you")({
       { title: "Pour vous — Artesia" },
       {
         name: "description",
-        content: "Des expositions parisiennes recommandées selon vos favoris et vos visites.",
+        content: "Des expositions parisiennes recommandées selon vos visites.",
       },
       { property: "og:title", content: "Pour vous — Artesia" },
       {
@@ -30,7 +29,6 @@ export const Route = createFileRoute("/_authenticated/for-you")({
 
 function ForYouPage() {
   const today = isoDate(0);
-  const { isFavorite, toggle } = useFavorites();
 
   const userQuery = useQuery({
     queryKey: ["auth", "user"],
@@ -49,8 +47,7 @@ function ForYouPage() {
       ? recommend(exhibitionsQuery.data, signals, today).slice(0, 10)
       : [];
   const hasHistory =
-    (signals?.favoriteIds.length ?? 0) +
-      (signals?.viewedIds.length ?? 0) +
+    (signals?.viewedIds.length ?? 0) +
       (signals?.reservedIds.length ?? 0) >
     0;
 
@@ -67,7 +64,7 @@ function ForYouPage() {
         <h1 className="text-3xl">Bonjour{firstName ? ` ${firstName}` : ""}</h1>
         <p className="mt-1 text-muted-foreground">
           {hasHistory
-            ? "Une sélection affinée d'après vos favoris, vos visites et vos réservations."
+            ? "Une sélection affinée d'après vos visites et vos réservations."
             : "Pour commencer, voici une sélection d'expositions parisiennes incontournables."}
         </p>
       </header>
@@ -84,8 +81,6 @@ function ForYouPage() {
               key={exhibition.id}
               exhibition={exhibition}
               day={today}
-              isFavorite={isFavorite(exhibition.id)}
-              onToggleFavorite={toggle}
             />
           ))}
         </div>

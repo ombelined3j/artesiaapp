@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Heart, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { AppShell } from "@/components/artesia/AppShell";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,9 @@ export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     meta: [
       { title: "Mon profil — Artesia" },
-      { name: "description", content: "Votre compte Artesia, vos favoris et vos préférences." },
+      { name: "description", content: "Votre compte Artesia et vos préférences." },
       { property: "og:title", content: "Mon profil — Artesia" },
-      { property: "og:description", content: "Gérez votre compte et vos favoris Artesia." },
+      { property: "og:description", content: "Gérez votre compte Artesia." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -41,12 +41,6 @@ function ProfilePage() {
       <p className="mb-6 text-muted-foreground">{user?.email}</p>
 
       <div className="space-y-2">
-        <Link
-          to="/favorites"
-          className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium"
-        >
-          <Heart className="h-5 w-5 text-primary" /> Mes favoris
-        </Link>
         <Link to="/search" className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium">
           <Search className="h-5 w-5 text-primary" /> Recherche et exploration
         </Link>

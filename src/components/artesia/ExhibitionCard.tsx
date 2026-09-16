@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {
@@ -14,8 +14,6 @@ import { exhibitionImage } from "@/lib/museum-images";
 type Props = {
   exhibition: Exhibition;
   day?: string;
-  isFavorite: boolean;
-  onToggleFavorite: (id: string) => void;
   /** "poster" affiche une grande affiche verticale, sans fond de carte. */
   variant?: "default" | "poster";
 };
@@ -23,8 +21,6 @@ type Props = {
 export function ExhibitionCard({
   exhibition,
   day,
-  isFavorite,
-  onToggleFavorite,
   variant = "default",
 }: Props) {
   const status = day ? statusLabel(exhibition, day) : null;
@@ -150,14 +146,6 @@ export function ExhibitionCard({
           </div>
         </div>
       </Link>
-      <button
-        type="button"
-        aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
-        onClick={() => onToggleFavorite(exhibition.id)}
-        className="self-start rounded-full p-2 text-muted-foreground transition-colors hover:text-primary"
-      >
-        <Heart className={cn("h-5 w-5", isFavorite && "fill-primary text-primary")} />
-      </button>
     </div>
   );
 }

@@ -16,7 +16,7 @@ export const Route = createFileRoute("/login")({
         content: "Connectez-vous à Artesia pour retrouver les expositions parisiennes du jour.",
       },
       { property: "og:title", content: "Se connecter — Artesia" },
-      { property: "og:description", content: "Accédez à vos favoris et à vos tickets Artesia." },
+      { property: "og:description", content: "Accédez à vos tickets Artesia." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
