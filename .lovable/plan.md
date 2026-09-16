@@ -13,9 +13,9 @@
    bouton « Voir N expositions ». Les univers proviennent des expositions existantes.
 4. **Filtre « Prix »** (remplace « Trier ») : panneau du bas avec « Gratuit »,
    « Max 15 € » et « Personnalisé » qui affiche un curseur de prix (0 → prix max).
-5. **Lieu** : nouveau filtre « Lieu » (Louvre, Musée d'Orsay, Centre Pompidou…) et le
-   nom du lieu sur sa propre ligne de chaque affiche, toujours lisible en mobile
-   (jamais coupé par le prix).
+5. **Lieu visible** (pas de filtre) : le nom du lieu (Louvre, Musée d'Orsay, Centre
+   Pompidou…) sur sa propre ligne de chaque affiche, toujours lisible en mobile.
+   Le filtre existant reste « Paris » / quartier.
 6. **Dates au lieu des horaires** sur les affiches : afficher la période de
    l'exposition (ex. « 15 – 30 sept ») ou « Aujourd'hui » / « Dernier jour », plus
    le prix, à la place des heures d'ouverture.
@@ -28,7 +28,7 @@ gardent le style violet existant.
 - `src/routes/_authenticated/search.tsx` : retirer l'`Input`, remplacer les `Select`
   par des pastilles ouvrant des `Drawer` (`@/components/ui/drawer`, déjà présent).
   Nouveaux états : `date: string | null`, `universes: string[]`, `priceMode:
-  "all" | "free" | "max15" | "custom"`, `maxPrice: number`, `museumId: string | null`.
+  "all" | "free" | "max15" | "custom"`, `maxPrice: number`.
   Le filtrage reste dans le `useMemo` existant ; `fetchAllExhibitions` inchangé.
 - Calendrier : `@/components/ui/calendar` (react-day-picker, locale fr) + helpers
   `isoDate`/`formatDateFr` de `src/lib/artesia.ts` ; « cette semaine » / « semaine
