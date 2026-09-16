@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Heart, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { AppShell } from "@/components/artesia/AppShell";
 import { Button } from "@/components/ui/button";

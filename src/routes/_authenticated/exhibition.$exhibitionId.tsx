@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, CalendarDays, Clock, ExternalLink, Heart, Landmark, MapPin, Share2 } from "lucide-react";
+import { ArrowLeft, CalendarDays, Clock, ExternalLink, Landmark, MapPin, Share2 } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
