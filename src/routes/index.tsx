@@ -51,8 +51,8 @@ function Landing() {
               Trouver et réserver les meilleures expositions.
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
-              Expos, vernissages, galeries, découvrez les meilleurs arts
-              visuels et réservez à l'avance en un clic.
+               Expos, vernissages, galeries, découvrez les meilleurs rendez-vous
+               artistiques et réservez à l'avance en un clic.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -105,7 +105,7 @@ function Landing() {
       </main>
 
       <footer className="border-t px-5 py-6 text-center text-sm text-muted-foreground">
-        Artesia · Les expositions de Paris
+         Artesia · Trouver les meilleurs 
       </footer>
     </div>
   );
