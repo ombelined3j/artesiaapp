@@ -54,9 +54,7 @@ function Landing() {
               Trouver et réserver les meilleures expositions.
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
-              Artesia rassemble les expositions parisiennes dans un fil simple à parcourir.
-              Vous repérez une expo, vous la gardez d'un tap, vous réservez sans quitter
-              l'application.
+              Trouvez les meilleures expo du moment et réservez en un clic.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
