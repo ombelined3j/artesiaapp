@@ -103,6 +103,10 @@ function SearchPage() {
     });
   }, [exhibitions, term, status, type, district, sort, today]);
 
+  const pill =
+    "inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border bg-transparent px-4 text-sm whitespace-nowrap";
+  const pillActive = "border-primary bg-primary text-primary-foreground";
+
   return (
     <AppShell>
       <header className="mb-4">
@@ -116,41 +120,16 @@ function SearchPage() {
         aria-label="Rechercher une exposition"
       />
 
-      <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4">
-        {statusChips.map((chip) => (
-          <button
-            key={chip.value}
-            type="button"
-            onClick={() => setStatus(chip.value)}
-            className={cn(
-              "shrink-0 rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors",
-              status === chip.value
-                ? "border-primary bg-primary text-primary-foreground"
-                : "bg-card",
-            )}
-          >
-            {chip.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-3 grid grid-cols-3 gap-2">
-        <Select value={type} onValueChange={setType}>
-          <SelectTrigger aria-label="Type d'exposition">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous types</SelectItem>
-            {types.map((value) => (
-              <SelectItem key={value} value={value}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="no-scrollbar -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1">
         <Select value={district} onValueChange={setDistrict}>
-          <SelectTrigger aria-label="Quartier">
-            <SelectValue placeholder="Quartier" />
+          <SelectTrigger
+            aria-label="Quartier"
+            className={cn(pill, district !== "all" && pillActive)}
+          >
+            <MapPin className="h-4 w-4" />
+            <SelectValue placeholder="Paris">
+              {district === "all" ? "Paris" : district}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tout Paris</SelectItem>
@@ -161,9 +140,45 @@ function SearchPage() {
             ))}
           </SelectContent>
         </Select>
+
+        {statusChips.map((chip) => (
+          <button
+            key={chip.value}
+            type="button"
+            onClick={() => setStatus(chip.value)}
+            className={cn(pill, status === chip.value && pillActive)}
+          >
+            {chip.value === "all" ? <CalendarDays className="h-4 w-4" /> : null}
+            {chip.label}
+          </button>
+        ))}
+
+        <Select value={type} onValueChange={setType}>
+          <SelectTrigger aria-label="Type d'exposition" className={cn(pill, type !== "all" && pillActive)}>
+            <SelectValue placeholder="Type">{type === "all" ? "Type" : type}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous types</SelectItem>
+            {types.map((value) => (
+              <SelectItem key={value} value={value}>
+                {value}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Select value={sort} onValueChange={setSort}>
-          <SelectTrigger aria-label="Trier">
-            <SelectValue placeholder="Trier" />
+          <SelectTrigger aria-label="Trier" className={cn(pill, sort !== "popularity" && pillActive)}>
+            <SlidersHorizontal className="h-4 w-4" />
+            <SelectValue placeholder="Trier">
+              {sort === "popularity"
+                ? "Trier"
+                : sort === "price"
+                  ? "Prix"
+                  : sort === "end"
+                    ? "Bientôt fini"
+                    : "A → Z"}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="popularity">Populaires</SelectItem>
@@ -174,7 +189,7 @@ function SearchPage() {
         </Select>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-7">
         {isError ? (
           <ErrorState />
         ) : isLoading ? (
@@ -185,17 +200,24 @@ function SearchPage() {
             description="Essayez un autre mot-clé ou élargissez vos filtres."
           />
         ) : (
-          <div className="space-y-3">
-            {results.map((exhibition) => (
-              <ExhibitionCard
-                key={exhibition.id}
-                exhibition={exhibition}
-                day={today}
-                isFavorite={isFavorite(exhibition.id)}
-                onToggleFavorite={toggle}
-              />
-            ))}
-          </div>
+          <>
+            <SectionTitle>
+              {results.length} exposition{results.length > 1 ? "s" : ""}
+            </SectionTitle>
+            <div className="divide-y">
+              {results.map((exhibition) => (
+                <div key={exhibition.id} className="py-4 first:pt-0">
+                  <ExhibitionCard
+                    exhibition={exhibition}
+                    day={today}
+                    variant="poster"
+                    isFavorite={isFavorite(exhibition.id)}
+                    onToggleFavorite={toggle}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </AppShell>
