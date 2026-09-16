@@ -51,7 +51,7 @@ function Landing() {
               Paris · Expositions
             </p>
             <h1 className="mt-4 text-4xl leading-tight md:text-5xl">
-              Ce qui se passe aujourd'hui, puis demain, dans les musées de Paris.
+              Trouver et réserver les meilleures expositions.
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
               Artesia rassemble les expositions parisiennes dans un fil simple à parcourir.
