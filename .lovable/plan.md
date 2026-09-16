@@ -1,0 +1,37 @@
+# Page Explorer : filtres façon Shotgun
+
+## Ce qui change à l'écran
+
+1. **Barre de recherche supprimée** — la page commence directement par la rangée de filtres.
+2. **Filtre « Agenda »** (icône calendrier) : ouvre un panneau qui monte du bas avec
+   « Aller à : Ce week-end / Week-end prochain », puis un vrai calendrier mensuel
+   (flèches mois précédent/suivant, jours passés grisés). La date choisie filtre les
+   expositions ouvertes ce jour-là et s'affiche sur la pastille (ex. « 18 sept »).
+3. **Filtre « Univers »** (remplace « Type ») : panneau du bas avec les univers en
+   pastilles multi-sélection (Peinture, Art moderne, Art contemporain, Photographie,
+   Sculpture, Dessin, Installation, Vidéo, Patrimoine…), un lien « Effacer » et un
+   bouton « Voir N expositions ». Les univers proviennent des expositions existantes.
+4. **Filtre « Prix »** (remplace « Trier ») : panneau du bas avec « Gratuit »,
+   « Max 15 € » et « Personnalisé » qui affiche un curseur de prix (0 → prix max).
+5. **Lieu** : nouveau filtre « Lieu » (Louvre, Musée d'Orsay, Centre Pompidou…) et le
+   nom du lieu affiché de façon lisible sur chaque affiche de résultat, sous le titre.
+
+Le tri par popularité reste appliqué par défaut (en silence), les pastilles actives
+gardent le style violet existant.
+
+## Détails techniques
+
+- `src/routes/_authenticated/search.tsx` : retirer l'`Input`, remplacer les `Select`
+  par des pastilles ouvrant des `Drawer` (`@/components/ui/drawer`, déjà présent).
+  Nouveaux états : `date: string | null`, `universes: string[]`, `priceMode:
+  "all" | "free" | "max15" | "custom"`, `maxPrice: number`, `museumId: string | null`.
+  Le filtrage reste dans le `useMemo` existant ; `fetchAllExhibitions` inchangé.
+- Calendrier : `@/components/ui/calendar` (react-day-picker, locale fr) + helpers
+  `isoDate`/`formatDateFr` de `src/lib/artesia.ts` ; « ce week-end » calculé côté client.
+- Curseur : `@/components/ui/slider`.
+- `src/components/artesia/ExhibitionCard.tsx` : dans la variante « poster », mettre le
+  nom du lieu sur sa propre ligne (au lieu d'être concaténé après le prix).
+- Aucun changement de base de données : `exhibition_type` sert d'univers,
+  `museums.name` de lieu.
+- Vérification : `tsgo` puis contrôle dans le navigateur en 393 px (ouverture des trois
+  panneaux, filtres combinés).
