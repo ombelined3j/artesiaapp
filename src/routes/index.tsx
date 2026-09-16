@@ -48,7 +48,7 @@ function Landing() {
         <section className="grid items-center gap-10 py-10 md:grid-cols-2 md:py-16">
           <div>
             <p className="text-xs font-semibold tracking-[0.2em] text-petrol uppercase">
-              Paris · Expositions
+              Explorez. Réservez.
             </p>
             <h1 className="mt-4 text-4xl leading-tight md:text-5xl">
               Trouver et réserver les meilleures expositions.
