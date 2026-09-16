@@ -92,7 +92,7 @@ function Landing() {
             {
               icon: Heart,
                title: "Enregistrez vos favoris",
-              text: "Gardez une exposition de côté depuis n'importe quelle carte.",
+              text: "Gardez une exposition de côté pour ne rien rater.",
             },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-card p-5">
