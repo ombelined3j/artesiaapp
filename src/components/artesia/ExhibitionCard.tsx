@@ -31,6 +31,7 @@ export function ExhibitionCard({
   const closing = formatTime(exhibition.closing_time);
   const dates = day ? dateRangeLabel(exhibition, day) : null;
   const poster = variant === "poster";
+  const isFree = Boolean(exhibition.is_free);
 
   return (
     <div
