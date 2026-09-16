@@ -164,7 +164,7 @@ function ExhibitionDetail() {
 
               {data.exhibition_type || data.mood ? (
                 <section className="mt-8">
-                  <SectionTitle>Ambiance</SectionTitle>
+                  <SectionTitle>Univers</SectionTitle>
                   <div className="flex flex-wrap gap-2">
                     {data.exhibition_type ? (
                       <span className="rounded-full border px-4 py-2 text-sm">
