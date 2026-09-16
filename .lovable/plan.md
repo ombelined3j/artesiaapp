@@ -4,7 +4,7 @@
 
 1. **Barre de recherche supprimée** — la page commence directement par la rangée de filtres.
 2. **Filtre « Agenda »** (icône calendrier) : ouvre un panneau qui monte du bas avec
-   « Aller à : Ce week-end / Week-end prochain », puis un vrai calendrier mensuel
+   « Aller à : Cette semaine / Semaine prochaine », puis un vrai calendrier mensuel
    (flèches mois précédent/suivant, jours passés grisés). La date choisie filtre les
    expositions ouvertes ce jour-là et s'affiche sur la pastille (ex. « 18 sept »).
 3. **Filtre « Univers »** (remplace « Type ») : panneau du bas avec les univers en
@@ -31,7 +31,8 @@ gardent le style violet existant.
   "all" | "free" | "max15" | "custom"`, `maxPrice: number`, `museumId: string | null`.
   Le filtrage reste dans le `useMemo` existant ; `fetchAllExhibitions` inchangé.
 - Calendrier : `@/components/ui/calendar` (react-day-picker, locale fr) + helpers
-  `isoDate`/`formatDateFr` de `src/lib/artesia.ts` ; « ce week-end » calculé côté client.
+  `isoDate`/`formatDateFr` de `src/lib/artesia.ts` ; « cette semaine » / « semaine
+  prochaine » calculés côté client (lundi → dimanche).
 - Curseur : `@/components/ui/slider`.
 - `src/components/artesia/ExhibitionCard.tsx` : dans la variante « poster », remplacer
   `formatTime(opening_time/closing_time)` par une plage de dates (nouveau helper de
