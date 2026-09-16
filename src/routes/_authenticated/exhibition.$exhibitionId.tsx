@@ -8,7 +8,6 @@ import { EmptyState, ErrorState, LoadingList, SectionTitle } from "@/components/
 import { BottomNav } from "@/components/artesia/BottomNav";
 import { MuseumMap } from "@/components/artesia/MuseumMap";
 import { Button } from "@/components/ui/button";
-import { useFavorites } from "@/hooks/use-favorites";
 import {
   fetchExhibition,
   formatDateFr,
@@ -57,7 +56,6 @@ function InfoRow({
 function ExhibitionDetail() {
   const { exhibitionId } = Route.useParams();
   const router = useRouter();
-  const { isFavorite, toggle } = useFavorites();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["exhibition", exhibitionId],
     queryFn: () => fetchExhibition(exhibitionId),
@@ -81,7 +79,6 @@ function ExhibitionDetail() {
     }
   };
 
-  const favorite = data ? isFavorite(data.id) : false;
   const heroImage = exhibitionImage(data);
 
 
@@ -135,17 +132,6 @@ function ExhibitionDetail() {
               <h1 className="text-3xl leading-tight">{data.title}</h1>
               <p className="mt-1 text-lg text-muted-foreground">{data.museums?.name}</p>
 
-              <button
-                type="button"
-                onClick={() => toggle(data.id)}
-                className={cn(
-                  "mt-5 inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold tracking-wide uppercase transition-colors",
-                  favorite ? "border-primary bg-primary/10 text-primary" : "bg-card",
-                )}
-              >
-                <Heart className={cn("h-4 w-4", favorite && "fill-primary")} />
-                {favorite ? "Favori" : "Ajouter aux favoris"}
-              </button>
 
               <div className="mt-6">
                 <InfoRow icon={<CalendarDays className="h-5 w-5" />}>
