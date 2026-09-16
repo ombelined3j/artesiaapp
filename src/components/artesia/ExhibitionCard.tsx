@@ -109,6 +109,11 @@ export function ExhibitionCard({
                 {status}
               </span>
             ) : null}
+            {isFree ? (
+              <span className="rounded-full border border-gold bg-gold/15 px-2 py-0.5 text-xs font-medium text-gold-foreground">
+                Gratuit
+              </span>
+            ) : null}
             {exhibition.exhibition_type ? (
               <span
                 className={cn(
