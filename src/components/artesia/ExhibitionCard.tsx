@@ -9,21 +9,42 @@ type Props = {
   day?: string;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
+  /** "poster" affiche une grande affiche verticale, sans fond de carte. */
+  variant?: "default" | "poster";
 };
 
-export function ExhibitionCard({ exhibition, day, isFavorite, onToggleFavorite }: Props) {
+export function ExhibitionCard({
+  exhibition,
+  day,
+  isFavorite,
+  onToggleFavorite,
+  variant = "default",
+}: Props) {
   const status = day ? statusLabel(exhibition, day) : null;
   const hours = formatTime(exhibition.opening_time);
   const closing = formatTime(exhibition.closing_time);
+  const poster = variant === "poster";
 
   return (
-    <div className="group relative flex gap-4 rounded-2xl bg-card p-3 transition-shadow hover:shadow-[0_8px_24px_-16px_var(--ink)]">
+    <div
+      className={cn(
+        "group relative flex gap-4",
+        poster
+          ? "items-start py-1"
+          : "rounded-2xl bg-card p-3 transition-shadow hover:shadow-[0_8px_24px_-16px_var(--ink)]",
+      )}
+    >
       <Link
         to="/exhibition/$exhibitionId"
         params={{ exhibitionId: exhibition.id }}
         className="flex min-w-0 flex-1 gap-4"
       >
-        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-muted sm:h-28 sm:w-28">
+        <div
+          className={cn(
+            "shrink-0 overflow-hidden rounded-xl bg-muted",
+            poster ? "aspect-[3/4] w-28" : "h-24 w-24 sm:h-28 sm:w-28",
+          )}
+        >
           {exhibition.image_url ? (
             <img
               src={exhibition.image_url}
