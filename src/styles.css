@@ -45,8 +45,10 @@
   --color-petrol-foreground: var(--petrol-foreground);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
-  --color-free: var(--free);
-  --color-free-foreground: var(--free-foreground);
+  --color-badge-last: #c9a24b;
+  --color-badge-free: #e1855c;
+  --color-badge-new: #bf656a;
+  --color-badge-foreground: #fffdf7;
   --color-ivory: var(--ivory);
   --color-ink: var(--ink);
   --color-chart-1: var(--chart-1);
