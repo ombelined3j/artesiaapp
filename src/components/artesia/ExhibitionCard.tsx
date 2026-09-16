@@ -66,7 +66,7 @@ export function ExhibitionCard({
           {poster ? (
             <p className="mt-1.5 truncate text-sm text-muted-foreground">
               {hours ? (
-                <span className="font-medium text-gold-strong">
+                <span className="font-medium text-primary">
                   {hours}
                   {closing ? ` – ${closing}` : ""}
                 </span>
