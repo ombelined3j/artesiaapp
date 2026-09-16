@@ -28,7 +28,7 @@ gardent le style violet existant.
 - `src/routes/_authenticated/search.tsx` : retirer l'`Input`, remplacer les `Select`
   par des pastilles ouvrant des `Drawer` (`@/components/ui/drawer`, déjà présent).
   Nouveaux états : `date: string | null`, `universes: string[]`, `priceMode:
-  "all" | "free" | "max15" | "custom"`, `maxPrice: number`, `museumId: string | null`.
+  "all" | "free" | "max15" | "custom"`, `maxPrice: number`.
   Le filtrage reste dans le `useMemo` existant ; `fetchAllExhibitions` inchangé.
 - Calendrier : `@/components/ui/calendar` (react-day-picker, locale fr) + helpers
   `isoDate`/`formatDateFr` de `src/lib/artesia.ts` ; « cette semaine » / « semaine
