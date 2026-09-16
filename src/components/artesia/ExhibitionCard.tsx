@@ -54,37 +54,72 @@ export function ExhibitionCard({
             />
           ) : null}
         </div>
-        <div className="min-w-0 flex-1">
-          <h3 className="truncate text-base font-medium">{exhibition.title}</h3>
-          <p className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground">
-            <MapPin className="h-3.5 w-3.5 shrink-0" />
-            {exhibition.museums?.name}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {hours ? (
-              <span className="text-foreground">
-                {hours}
-                {closing ? ` – ${closing}` : ""}
+        <div className={cn("min-w-0 flex-1", poster && "pt-1")}>
+          <h3
+            className={cn(
+              "truncate",
+              poster ? "text-lg font-semibold" : "text-base font-medium",
+            )}
+          >
+            {exhibition.title}
+          </h3>
+          {poster ? (
+            <p className="mt-1.5 truncate text-sm text-muted-foreground">
+              {hours ? (
+                <span className="font-medium text-gold-strong">
+                  {hours}
+                  {closing ? ` – ${closing}` : ""}
+                </span>
+              ) : null}
+              {hours ? " · " : ""}
+              <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
+                {priceLabel(exhibition)}
               </span>
-            ) : null}
-            {hours ? " · " : ""}
-            <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
-              {priceLabel(exhibition)}
-            </span>
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
+              {exhibition.museums?.name ? ` · ${exhibition.museums.name}` : ""}
+            </p>
+          ) : (
+            <>
+              <p className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5 shrink-0" />
+                {exhibition.museums?.name}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {hours ? (
+                  <span className="text-foreground">
+                    {hours}
+                    {closing ? ` – ${closing}` : ""}
+                  </span>
+                ) : null}
+                {hours ? " · " : ""}
+                <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
+                  {priceLabel(exhibition)}
+                </span>
+              </p>
+            </>
+          )}
+          <div className={cn("flex flex-wrap gap-1.5", poster ? "mt-2.5" : "mt-2")}>
             {status ? (
               <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-medium text-gold-foreground">
                 {status}
               </span>
             ) : null}
             {exhibition.exhibition_type ? (
-              <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
+              <span
+                className={cn(
+                  "rounded-full border text-xs text-muted-foreground",
+                  poster ? "px-3 py-1" : "px-2 py-0.5",
+                )}
+              >
                 {exhibition.exhibition_type}
               </span>
             ) : null}
             {exhibition.mood ? (
-              <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
+              <span
+                className={cn(
+                  "rounded-full border text-xs text-muted-foreground",
+                  poster ? "px-3 py-1" : "px-2 py-0.5",
+                )}
+              >
                 {exhibition.mood}
               </span>
             ) : null}
