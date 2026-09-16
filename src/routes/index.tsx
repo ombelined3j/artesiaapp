@@ -51,8 +51,8 @@ function Landing() {
               Trouver et réserver les meilleures expositions.
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
-              Expos, vernissages, galeries... découvrez les meilleurs arts
-              visuels et réservez vos visites à l'avance en un clic.
+              Expos, vernissages, galeries, découvrez les meilleurs arts
+              visuels et réservez à l'avance en un clic.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -76,23 +76,23 @@ function Landing() {
           {[
             {
               icon: CalendarDays,
-              title: "Aujourd'hui / Demain",
-              text: "Un fil chronologique, avec les horaires, les prix et les derniers jours.",
+               title: "Les expos du moment à ne pas rater",
+               text: "Découvrez les meilleures expos actuelles et à venir.",
             },
             {
               icon: Sparkles,
               title: "Pour vous",
-              text: "Une sélection des meilleures expositions pour vous. Réservation en un clic.",
+               text: "Obtenez des recommandations selon vos préférences.\u00a0\u00a0",
             },
             {
               icon: Heart,
-              title: "Favoris en un tap",
+               title: "Enregistrez vos favoris",
               text: "Gardez une exposition de côté depuis n'importe quelle carte.",
             },
             {
               icon: Ticket,
-              title: "Réservation directe",
-              text: "Date, créneau, visiteurs : votre billet en quelques secondes.",
+               title: "Réservation en un clic",
+               text: "Date, horaires, prix : réservez votre billet en quelques secondes.",
             },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-card p-5">
