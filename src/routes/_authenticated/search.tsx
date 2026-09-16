@@ -1,11 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPinned } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import { AppShell, EmptyState, ErrorState, LoadingList } from "@/components/artesia/AppShell";
 import { ExhibitionCard } from "@/components/artesia/ExhibitionCard";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -107,13 +105,8 @@ function SearchPage() {
 
   return (
     <AppShell>
-      <header className="mb-4 flex items-center justify-between gap-3">
+      <header className="mb-4">
         <h1 className="text-3xl">Explorer</h1>
-        <Button asChild variant="ghost" size="icon" aria-label="Voir la carte">
-          <Link to="/map">
-            <MapPinned className="h-5 w-5" />
-          </Link>
-        </Button>
       </header>
 
       <Input

@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Heart, MapPinned, Search } from "lucide-react";
+import { Heart, Search } from "lucide-react";
 
 import { AppShell } from "@/components/artesia/AppShell";
 import { Button } from "@/components/ui/button";
@@ -49,9 +49,6 @@ function ProfilePage() {
         </Link>
         <Link to="/search" className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium">
           <Search className="h-5 w-5 text-primary" /> Recherche et exploration
-        </Link>
-        <Link to="/map" className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium">
-          <MapPinned className="h-5 w-5 text-primary" /> Carte des musées
         </Link>
       </div>
 
