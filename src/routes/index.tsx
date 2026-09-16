@@ -48,7 +48,7 @@ function Landing() {
         <section className="grid items-center gap-10 py-10 md:grid-cols-2 md:py-16">
           <div>
             <h1 className="mt-4 text-4xl leading-tight md:text-5xl">
-              Trouver et réserver les meilleures expositions.
+              La meilleure façon de vivre l'art.&nbsp;
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
                Expos, vernissages, galeries, découvrez les meilleurs rendez-vous
