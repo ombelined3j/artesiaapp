@@ -23,6 +23,7 @@ const MUSEUM_IMAGES: Record<string, string> = {
   "centre-pompidou": centrePompidou.url,
   "fondation-louis-vuitton": fondationLouisVuitton.url,
   "jeu-de-paume": jeuDePaume.url,
+  "musee-d-orsay": museeDOrsay.url,
   "musee-du-louvre": museeDuLouvre.url,
   "musee-picasso": museePicasso.url,
   "palais-de-tokyo": palaisDeTokyo.url,
