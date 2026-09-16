@@ -15,7 +15,6 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
 import { Route as AuthenticatedForYouRouteImport } from './routes/_authenticated/for-you'
-import { Route as AuthenticatedMapRouteImport } from './routes/_authenticated/map'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
@@ -51,11 +50,6 @@ const AuthenticatedFavoritesRoute = AuthenticatedFavoritesRouteImport.update({
 const AuthenticatedForYouRoute = AuthenticatedForYouRouteImport.update({
   id: '/for-you',
   path: '/for-you',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedMapRoute = AuthenticatedMapRouteImport.update({
-  id: '/map',
-  path: '/map',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
@@ -103,7 +97,6 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/for-you': typeof AuthenticatedForYouRoute
-  '/map': typeof AuthenticatedMapRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/search': typeof AuthenticatedSearchRoute
   '/tickets': typeof AuthenticatedTicketsRoute
@@ -118,7 +111,6 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/for-you': typeof AuthenticatedForYouRoute
-  '/map': typeof AuthenticatedMapRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/search': typeof AuthenticatedSearchRoute
   '/tickets': typeof AuthenticatedTicketsRoute
@@ -135,7 +127,6 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/for-you': typeof AuthenticatedForYouRoute
-  '/_authenticated/map': typeof AuthenticatedMapRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
@@ -152,7 +143,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/favorites'
     | '/for-you'
-    | '/map'
     | '/profile'
     | '/search'
     | '/tickets'
@@ -167,7 +157,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/favorites'
     | '/for-you'
-    | '/map'
     | '/profile'
     | '/search'
     | '/tickets'
@@ -183,7 +172,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/favorites'
     | '/_authenticated/for-you'
-    | '/_authenticated/map'
     | '/_authenticated/profile'
     | '/_authenticated/search'
     | '/_authenticated/tickets'
@@ -242,13 +230,6 @@ declare module '@tanstack/react-router' {
       path: '/for-you'
       fullPath: '/for-you'
       preLoaderRoute: typeof AuthenticatedForYouRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/map': {
-      id: '/_authenticated/map'
-      path: '/map'
-      fullPath: '/map'
-      preLoaderRoute: typeof AuthenticatedMapRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/profile': {
@@ -321,7 +302,6 @@ const AuthenticatedExhibitionExhibitionIdRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
   AuthenticatedForYouRoute: typeof AuthenticatedForYouRoute
-  AuthenticatedMapRoute: typeof AuthenticatedMapRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
@@ -333,7 +313,6 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
   AuthenticatedForYouRoute: AuthenticatedForYouRoute,
-  AuthenticatedMapRoute: AuthenticatedMapRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
   AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
