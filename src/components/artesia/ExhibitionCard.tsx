@@ -105,16 +105,17 @@ export function ExhibitionCard({
           )}
           <div className={cn("flex flex-wrap gap-1.5", poster ? "mt-2.5" : "mt-2")}>
             {isFree ? (
-              <span className="rounded-full bg-free px-2 py-0.5 text-xs font-semibold text-free-foreground">
+              <span className="inline-flex h-6 items-center justify-center rounded-full bg-badge-free px-3 text-center text-xs font-semibold leading-none text-badge-foreground">
                 Gratuit
               </span>
             ) : null}
-            {status === "Dernier jour" ? (
-              <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-medium text-gold-foreground">
-                {status}
-              </span>
-            ) : status ? (
-              <span className="rounded-full bg-primary/12 px-2 py-0.5 text-xs font-medium text-primary ring-1 ring-primary/30">
+            {status ? (
+              <span
+                className={cn(
+                  "inline-flex h-6 items-center justify-center rounded-full px-3 text-center text-xs font-semibold leading-none text-badge-foreground",
+                  status === "Dernier jour" ? "bg-badge-last" : "bg-badge-new",
+                )}
+              >
                 {status}
               </span>
             ) : null}
