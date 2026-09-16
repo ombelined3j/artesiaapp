@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarDays, Heart, Sparkles, Ticket } from "lucide-react";
+import { CalendarDays, Sparkles, Ticket } from "lucide-react";
 
 import heroAsset from "@/assets/hero-artesia.webp.asset.json";
 import { Logo } from "@/components/artesia/Logo";
@@ -72,7 +72,7 @@ function Landing() {
           </div>
         </section>
 
-        <section className="grid gap-4 pb-16 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="grid gap-4 pb-16 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               icon: CalendarDays,
@@ -88,11 +88,6 @@ function Landing() {
               icon: Sparkles,
               title: "Pour vous",
                text: "Obtenez des recommandations selon vos préférences.\u00a0\u00a0",
-            },
-            {
-              icon: Heart,
-               title: "Enregistrez vos favoris",
-              text: "Gardez une exposition de côté pour ne rien rater.",
             },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-card p-5">
