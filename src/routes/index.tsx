@@ -89,11 +89,6 @@ function Landing() {
               title: "Pour vous",
                text: "Obtenez des recommandations selon vos préférences.\u00a0\u00a0",
             },
-            {
-              icon: Heart,
-               title: "Enregistrez vos favoris",
-              text: "Gardez une exposition de côté pour ne rien rater.",
-            },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-card p-5">
               <Icon className="h-5 w-5 text-primary" />
