@@ -82,7 +82,7 @@ function Landing() {
             {
               icon: Ticket,
                title: "Réservation en un clic",
-               text: "Date, horaires, prix : réservez votre billet en quelques secondes.",
+               text: "Réservez votre billet en quelques secondes et planifier vos sorties sans faire la queue. ",
             },
             {
               icon: Sparkles,
