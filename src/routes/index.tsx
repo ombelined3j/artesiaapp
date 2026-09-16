@@ -51,7 +51,8 @@ function Landing() {
               Trouver et réserver les meilleures expositions.
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
-              Trouvez les meilleures expo du moment et réservez en un clic.
+              Expos, vernissages, galeries... découvrez les meilleurs arts
+              visuels et réservez vos visites à l'avance en un clic.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
