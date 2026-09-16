@@ -80,6 +80,11 @@ function Landing() {
                text: "Découvrez les meilleures expos actuelles et à venir.",
             },
             {
+              icon: Ticket,
+               title: "Réservation en un clic",
+               text: "Date, horaires, prix : réservez votre billet en quelques secondes.",
+            },
+            {
               icon: Sparkles,
               title: "Pour vous",
                text: "Obtenez des recommandations selon vos préférences.\u00a0\u00a0",
@@ -88,11 +93,6 @@ function Landing() {
               icon: Heart,
                title: "Enregistrez vos favoris",
               text: "Gardez une exposition de côté depuis n'importe quelle carte.",
-            },
-            {
-              icon: Ticket,
-               title: "Réservation en un clic",
-               text: "Date, horaires, prix : réservez votre billet en quelques secondes.",
             },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-card p-5">
