@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarDays, Heart, Sparkles, Ticket } from "lucide-react";
 
+import heroAsset from "@/assets/hero-artesia.webp.asset.json";
 import { Logo } from "@/components/artesia/Logo";
 import { Button } from "@/components/ui/button";
 
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const heroImage = "https://res.cloudinary.com/ncu7idmv/image/upload/f_auto,q_auto/A";
+const heroImage = heroAsset.url;
 
 function Landing() {
   return (
@@ -69,8 +70,8 @@ function Landing() {
           <div className="overflow-hidden rounded-3xl bg-muted">
             <img
               src={heroImage}
-              alt="Visiteurs dans une salle d'exposition parisienne"
-              className="h-[380px] w-full object-cover md:h-[460px]"
+              alt="Sculpture florale rose monumentale sous la coupole d'un musée parisien"
+              className="h-[380px] w-full object-cover object-center md:h-[460px]"
             />
           </div>
         </section>
