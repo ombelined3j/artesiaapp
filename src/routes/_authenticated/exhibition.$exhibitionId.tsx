@@ -16,6 +16,7 @@ import {
   priceLabel,
   trackExhibitionView,
 } from "@/lib/artesia";
+import { exhibitionImage } from "@/lib/museum-images";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/exhibition/$exhibitionId")({
@@ -81,19 +82,26 @@ function ExhibitionDetail() {
   };
 
   const favorite = data ? isFavorite(data.id) : false;
+  const heroImage = exhibitionImage(data);
+
 
   return (
     <div className="min-h-screen bg-background pb-40">
       <div className="mx-auto max-w-2xl">
         <div className="relative">
           <div className="aspect-[4/3] w-full overflow-hidden bg-muted sm:aspect-[16/9] sm:rounded-b-3xl">
-            {data?.image_url ? (
+            {heroImage ? (
               <img
-                src={data.image_url}
-                alt={data.title}
+                src={heroImage}
+                alt={data?.title ?? "Exposition"}
                 className="h-full w-full object-cover"
               />
-            ) : null}
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-secondary to-muted px-6 text-center text-sm font-medium text-muted-foreground">
+                {data?.museums?.name ?? data?.title}
+              </div>
+            )}
+
           </div>
           <div className="absolute inset-x-4 top-4 flex items-center justify-between">
             <button

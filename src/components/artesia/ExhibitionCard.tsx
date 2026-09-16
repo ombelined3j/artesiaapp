@@ -9,6 +9,7 @@ import {
   statusLabel,
   type Exhibition,
 } from "@/lib/artesia";
+import { exhibitionImage } from "@/lib/museum-images";
 
 type Props = {
   exhibition: Exhibition;
@@ -32,6 +33,8 @@ export function ExhibitionCard({
   const dates = day ? dateRangeLabel(exhibition, day) : null;
   const poster = variant === "poster";
   const isFree = Boolean(exhibition.is_free);
+  const image = exhibitionImage(exhibition);
+
 
   return (
     <div
@@ -53,14 +56,19 @@ export function ExhibitionCard({
             poster ? "aspect-[3/4] w-28" : "h-24 w-24 sm:h-28 sm:w-28",
           )}
         >
-          {exhibition.image_url ? (
+          {image ? (
             <img
-              src={exhibition.image_url}
+              src={image}
               alt={exhibition.title}
               loading="lazy"
               className="h-full w-full object-cover"
             />
-          ) : null}
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-secondary to-muted p-2 text-center text-[11px] font-medium leading-tight text-muted-foreground">
+              {exhibition.museums?.name ?? exhibition.title}
+            </div>
+          )}
+
         </div>
         <div className={cn("min-w-0 flex-1", poster && "pt-1")}>
           <h3
