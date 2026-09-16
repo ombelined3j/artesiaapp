@@ -66,6 +66,25 @@ export function formatTime(value: string | null) {
   return value.slice(0, 5).replace(":", "h");
 }
 
+/** Date courte type « 15 sept ». */
+export function formatDayShort(value: string) {
+  return new Date(`${value}T12:00:00`)
+    .toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
+    .replace(".", "");
+}
+
+/** Période d'affichage d'une exposition, relative au jour donné. */
+export function dateRangeLabel(
+  exhibition: Pick<Exhibition, "start_date" | "end_date">,
+  today: string,
+) {
+  if (exhibition.end_date === today) return "Dernier jour";
+  if (exhibition.start_date > today) {
+    return `${formatDayShort(exhibition.start_date)} – ${formatDayShort(exhibition.end_date)}`;
+  }
+  return `Jusqu'au ${formatDayShort(exhibition.end_date)}`;
+}
+
 export function priceLabel(exhibition: Pick<Exhibition, "is_free" | "price">) {
   return exhibition.is_free || Number(exhibition.price) === 0
     ? "Gratuit"
