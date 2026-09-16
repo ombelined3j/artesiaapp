@@ -133,46 +133,11 @@ export async function fetchMuseums() {
   return (data ?? []) as unknown as Museum[];
 }
 
-export async function fetchFavoriteIds() {
-  const { data, error } = await supabase.from("favorites").select("exhibition_id");
-  if (error) throw error;
-  return (data ?? []).map((row) => row.exhibition_id as string);
-}
-
-export async function fetchFavoriteExhibitions() {
-  const { data, error } = await supabase
-    .from("favorites")
-    .select(`exhibition_id, created_at, exhibitions(${EXHIBITION_SELECT})`)
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return ((data ?? []) as unknown as { exhibitions: Exhibition | null }[])
-    .map((row) => row.exhibitions)
-    .filter((e): e is Exhibition => Boolean(e));
-}
-
 /** Identifiant de l'utilisateur connecté, requis par les règles d'accès. */
 export async function requireUserId() {
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) throw new Error("Vous devez être connecté.");
   return data.user.id;
-}
-
-export async function toggleFavorite(exhibitionId: string, isFavorite: boolean) {
-  const userId = await requireUserId();
-  if (isFavorite) {
-    const { error } = await supabase
-      .from("favorites")
-      .delete()
-      .eq("exhibition_id", exhibitionId)
-      .eq("user_id", userId);
-    if (error) throw error;
-    return false;
-  }
-  const { error } = await supabase
-    .from("favorites")
-    .insert({ exhibition_id: exhibitionId, user_id: userId });
-  if (error) throw error;
-  return true;
 }
 
 export async function trackExhibitionView(exhibitionId: string) {
@@ -227,7 +192,6 @@ export async function createReservation(input: ReservationInput) {
 
 /** Signaux d'usage utilisés par les recommandations « Pour vous ». */
 export type Signals = {
-  favoriteIds: string[];
   viewedIds: string[];
   reservedIds: string[];
   preferredTypes: string[];
@@ -235,8 +199,7 @@ export type Signals = {
 };
 
 export async function fetchSignals(): Promise<Signals> {
-  const [favorites, views, reservations] = await Promise.all([
-    supabase.from("favorites").select(`exhibition_id, exhibitions(exhibition_type, mood)`),
+  const [views, reservations] = await Promise.all([
     supabase
       .from("exhibition_views")
       .select(`exhibition_id, exhibitions(exhibition_type, mood)`)
@@ -249,19 +212,17 @@ export async function fetchSignals(): Promise<Signals> {
     exhibition_id: string;
     exhibitions: { exhibition_type: string | null; mood: string | null } | null;
   };
-  const favRows = (favorites.data ?? []) as unknown as Row[];
   const viewRows = (views.data ?? []) as unknown as Row[];
   const resRows = (reservations.data ?? []) as unknown as Row[];
 
   const types = new Set<string>();
   const moods = new Set<string>();
-  for (const row of [...favRows, ...resRows, ...viewRows]) {
+  for (const row of [...resRows, ...viewRows]) {
     if (row.exhibitions?.exhibition_type) types.add(row.exhibitions.exhibition_type);
     if (row.exhibitions?.mood) moods.add(row.exhibitions.mood);
   }
 
   return {
-    favoriteIds: favRows.map((r) => r.exhibition_id),
     viewedIds: viewRows.map((r) => r.exhibition_id),
     reservedIds: resRows.map((r) => r.exhibition_id),
     preferredTypes: [...types],
@@ -281,7 +242,6 @@ export function scoreExhibition(exhibition: Exhibition, signals: Signals, today:
     score += 6;
   if (exhibition.mood && signals.preferredMoods.includes(exhibition.mood)) score += 3;
   if (exhibition.is_free) score += 1;
-  if (signals.favoriteIds.includes(exhibition.id)) score -= 12;
   if (signals.reservedIds.includes(exhibition.id)) score -= 20;
   if (signals.viewedIds.includes(exhibition.id)) score -= 2;
   return score;

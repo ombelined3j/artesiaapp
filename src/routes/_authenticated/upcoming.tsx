@@ -14,7 +14,6 @@ import { ExhibitionCard } from "@/components/artesia/ExhibitionCard";
 import { FilterBar, type Filters } from "@/components/artesia/FilterBar";
 import { Logo } from "@/components/artesia/Logo";
 import { Button } from "@/components/ui/button";
-import { useFavorites } from "@/hooks/use-favorites";
 import { fetchExhibitionsForDay, isoDate, type Exhibition } from "@/lib/artesia";
 
 export const Route = createFileRoute("/_authenticated/upcoming")({
@@ -28,7 +27,7 @@ export const Route = createFileRoute("/_authenticated/upcoming")({
       { property: "og:title", content: "À venir — Artesia" },
       {
         property: "og:description",
-        content: "Aujourd'hui et demain à Paris : horaires, prix et favoris en un tap.",
+        content: "Aujourd'hui et demain à Paris : horaires et prix en un tap.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -51,7 +50,6 @@ function DaySection({
   filters: Filters;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const { isFavorite, toggle } = useFavorites();
 
   const filtered = exhibitions.filter(
     (exhibition) =>
@@ -77,8 +75,6 @@ function DaySection({
               key={exhibition.id}
               exhibition={exhibition}
               day={day}
-              isFavorite={isFavorite(exhibition.id)}
-              onToggleFavorite={toggle}
             />
           ))}
           {remaining > 0 ? (
