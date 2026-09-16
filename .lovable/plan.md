@@ -33,8 +33,10 @@ gardent le style violet existant.
 - Calendrier : `@/components/ui/calendar` (react-day-picker, locale fr) + helpers
   `isoDate`/`formatDateFr` de `src/lib/artesia.ts` ; « ce week-end » calculé côté client.
 - Curseur : `@/components/ui/slider`.
-- `src/components/artesia/ExhibitionCard.tsx` : dans la variante « poster », mettre le
-  nom du lieu sur sa propre ligne (au lieu d'être concaténé après le prix).
+- `src/components/artesia/ExhibitionCard.tsx` : dans la variante « poster », remplacer
+  `formatTime(opening_time/closing_time)` par une plage de dates (nouveau helper de
+  formatage court dans `src/lib/artesia.ts`), et mettre le nom du lieu sur sa propre
+  ligne avec `truncate` + `min-w-0` pour rester lisible en mobile.
 - Aucun changement de base de données : `exhibition_type` sert d'univers,
   `museums.name` de lieu.
 - Vérification : `tsgo` puis contrôle dans le navigateur en 393 px (ouverture des trois
