@@ -100,7 +100,7 @@ function Landing() {
       </main>
 
       <footer className="border-t px-5 py-6 text-center text-sm text-muted-foreground">
-         Artesia · Trouver les meilleurs rendez-vous artistiques
+         Artesia · Les meilleurs rendez-vous artistiques
       </footer>
     </div>
   );
