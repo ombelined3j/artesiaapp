@@ -77,7 +77,7 @@ function Landing() {
             {
               icon: CalendarDays,
                title: "Les expos du moment à ne pas rater",
-               text: "Date, horaires, prix : découvrez les meilleurs évènements actuelles et à venir.",
+               text: "Date, horaires, prix : découvrez les meilleurs évènements actuels et à venir.",
             },
             {
               icon: Ticket,
