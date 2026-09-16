@@ -14,7 +14,11 @@
 4. **Filtre « Prix »** (remplace « Trier ») : panneau du bas avec « Gratuit »,
    « Max 15 € » et « Personnalisé » qui affiche un curseur de prix (0 → prix max).
 5. **Lieu** : nouveau filtre « Lieu » (Louvre, Musée d'Orsay, Centre Pompidou…) et le
-   nom du lieu affiché de façon lisible sur chaque affiche de résultat, sous le titre.
+   nom du lieu sur sa propre ligne de chaque affiche, toujours lisible en mobile
+   (jamais coupé par le prix).
+6. **Dates au lieu des horaires** sur les affiches : afficher la période de
+   l'exposition (ex. « 15 – 30 sept ») ou « Aujourd'hui » / « Dernier jour », plus
+   le prix, à la place des heures d'ouverture.
 
 Le tri par popularité reste appliqué par défaut (en silence), les pastilles actives
 gardent le style violet existant.
@@ -29,8 +33,10 @@ gardent le style violet existant.
 - Calendrier : `@/components/ui/calendar` (react-day-picker, locale fr) + helpers
   `isoDate`/`formatDateFr` de `src/lib/artesia.ts` ; « ce week-end » calculé côté client.
 - Curseur : `@/components/ui/slider`.
-- `src/components/artesia/ExhibitionCard.tsx` : dans la variante « poster », mettre le
-  nom du lieu sur sa propre ligne (au lieu d'être concaténé après le prix).
+- `src/components/artesia/ExhibitionCard.tsx` : dans la variante « poster », remplacer
+  `formatTime(opening_time/closing_time)` par une plage de dates (nouveau helper de
+  formatage court dans `src/lib/artesia.ts`), et mettre le nom du lieu sur sa propre
+  ligne avec `truncate` + `min-w-0` pour rester lisible en mobile.
 - Aucun changement de base de données : `exhibition_type` sert d'univers,
   `museums.name` de lieu.
 - Vérification : `tsgo` puis contrôle dans le navigateur en 393 px (ouverture des trois
