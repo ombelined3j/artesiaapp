@@ -14,7 +14,11 @@
 4. **Filtre « Prix »** (remplace « Trier ») : panneau du bas avec « Gratuit »,
    « Max 15 € » et « Personnalisé » qui affiche un curseur de prix (0 → prix max).
 5. **Lieu** : nouveau filtre « Lieu » (Louvre, Musée d'Orsay, Centre Pompidou…) et le
-   nom du lieu affiché de façon lisible sur chaque affiche de résultat, sous le titre.
+   nom du lieu sur sa propre ligne de chaque affiche, toujours lisible en mobile
+   (jamais coupé par le prix).
+6. **Dates au lieu des horaires** sur les affiches : afficher la période de
+   l'exposition (ex. « 15 – 30 sept ») ou « Aujourd'hui » / « Dernier jour », plus
+   le prix, à la place des heures d'ouverture.
 
 Le tri par popularité reste appliqué par défaut (en silence), les pastilles actives
 gardent le style violet existant.
