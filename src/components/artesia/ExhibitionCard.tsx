@@ -74,10 +74,8 @@ export function ExhibitionCard({
             <>
               <p className="mt-1.5 truncate text-sm text-muted-foreground">
                 {dates ? <span className="font-medium text-primary">{dates}</span> : null}
-                {dates ? " · " : ""}
-                <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
-                  {priceLabel(exhibition)}
-                </span>
+                {dates && !isFree ? " · " : ""}
+                {isFree ? null : priceLabel(exhibition)}
               </p>
               {exhibition.museums?.name ? (
                 <p className="mt-1 flex min-w-0 items-center gap-1 text-sm text-muted-foreground">
@@ -99,10 +97,8 @@ export function ExhibitionCard({
                     {closing ? ` – ${closing}` : ""}
                   </span>
                 ) : null}
-                {hours ? " · " : ""}
-                <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
-                  {priceLabel(exhibition)}
-                </span>
+                {hours && !isFree ? " · " : ""}
+                {isFree ? null : priceLabel(exhibition)}
               </p>
             </>
           )}
