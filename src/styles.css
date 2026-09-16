@@ -45,6 +45,8 @@
   --color-petrol-foreground: var(--petrol-foreground);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
+  --color-free: var(--free);
+  --color-free-foreground: var(--free-foreground);
   --color-ivory: var(--ivory);
   --color-ink: var(--ink);
   --color-chart-1: var(--chart-1);
@@ -84,6 +86,8 @@
   --petrol-foreground: oklch(0.98 0.008 85.6);
   --gold: oklch(0.723 0.104 84.2);
   --gold-foreground: oklch(0.279 0 0);
+  --free: oklch(0.68 0.145 163);
+  --free-foreground: oklch(0.21 0.03 163);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.885 0.021 85.6);
