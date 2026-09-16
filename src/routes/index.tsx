@@ -82,7 +82,7 @@ function Landing() {
             {
               icon: Sparkles,
               title: "Pour vous",
-              text: "Des recommandations qui s'affinent selon vos favoris et vos visites.",
+              text: "Une sélection des meilleures expositions pour vous. Réservation en un clic.",
             },
             {
               icon: Heart,
