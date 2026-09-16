@@ -111,7 +111,7 @@ function SearchPage() {
   }, [exhibitions, term, status, type, district, sort, today]);
 
   const pill =
-    "inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border bg-transparent px-4 text-sm whitespace-nowrap";
+    "inline-flex h-10 w-auto shrink-0 items-center gap-1.5 rounded-full border bg-transparent px-4 text-sm whitespace-nowrap";
   const pillActive = "border-primary bg-primary text-primary-foreground";
 
   return (
