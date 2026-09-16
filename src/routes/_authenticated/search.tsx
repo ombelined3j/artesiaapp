@@ -332,7 +332,7 @@ function SearchPage() {
                   min={0}
                   max={priceCeiling}
                   step={1}
-                  onValueChange={([value]) => setMaxPrice(value)}
+                  onValueChange={([value]) => setMaxPrice(value ?? 0)}
                 />
               </div>
             ) : null}
