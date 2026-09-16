@@ -1,6 +1,7 @@
 import centrePompidou from "@/assets/museums/centre-pompidou.jpg.asset.json";
 import fondationLouisVuitton from "@/assets/museums/fondation-louis-vuitton.jpg.asset.json";
 import jeuDePaume from "@/assets/museums/jeu-de-paume.jpg.asset.json";
+import museeDOrsay from "@/assets/museums/musee-d-orsay.jpg.asset.json";
 import museeDuLouvre from "@/assets/museums/musee-du-louvre.jpg.asset.json";
 import museePicasso from "@/assets/museums/musee-picasso.jpg.asset.json";
 import palaisDeTokyo from "@/assets/museums/palais-de-tokyo.jpg.asset.json";
