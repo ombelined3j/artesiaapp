@@ -64,19 +64,21 @@ export function ExhibitionCard({
             {exhibition.title}
           </h3>
           {poster ? (
-            <p className="mt-1.5 truncate text-sm text-muted-foreground">
-              {hours ? (
-                <span className="font-medium text-primary">
-                  {hours}
-                  {closing ? ` – ${closing}` : ""}
+            <>
+              <p className="mt-1.5 truncate text-sm text-muted-foreground">
+                {dates ? <span className="font-medium text-primary">{dates}</span> : null}
+                {dates ? " · " : ""}
+                <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
+                  {priceLabel(exhibition)}
                 </span>
+              </p>
+              {exhibition.museums?.name ? (
+                <p className="mt-1 flex min-w-0 items-center gap-1 text-sm text-muted-foreground">
+                  <MapPin className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{exhibition.museums.name}</span>
+                </p>
               ) : null}
-              {hours ? " · " : ""}
-              <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
-                {priceLabel(exhibition)}
-              </span>
-              {exhibition.museums?.name ? ` · ${exhibition.museums.name}` : ""}
-            </p>
+            </>
           ) : (
             <>
               <p className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground">
