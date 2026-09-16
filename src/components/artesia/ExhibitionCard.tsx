@@ -2,7 +2,13 @@ import { Link } from "@tanstack/react-router";
 import { Heart, MapPin } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { formatTime, priceLabel, statusLabel, type Exhibition } from "@/lib/artesia";
+import {
+  dateRangeLabel,
+  formatTime,
+  priceLabel,
+  statusLabel,
+  type Exhibition,
+} from "@/lib/artesia";
 
 type Props = {
   exhibition: Exhibition;
@@ -23,7 +29,9 @@ export function ExhibitionCard({
   const status = day ? statusLabel(exhibition, day) : null;
   const hours = formatTime(exhibition.opening_time);
   const closing = formatTime(exhibition.closing_time);
+  const dates = day ? dateRangeLabel(exhibition, day) : null;
   const poster = variant === "poster";
+  const isFree = Boolean(exhibition.is_free);
 
   return (
     <div
@@ -64,19 +72,19 @@ export function ExhibitionCard({
             {exhibition.title}
           </h3>
           {poster ? (
-            <p className="mt-1.5 truncate text-sm text-muted-foreground">
-              {hours ? (
-                <span className="font-medium text-primary">
-                  {hours}
-                  {closing ? ` – ${closing}` : ""}
-                </span>
+            <>
+              <p className="mt-1.5 truncate text-sm text-muted-foreground">
+                {dates ? <span className="font-medium text-primary">{dates}</span> : null}
+                {dates && !isFree ? " · " : ""}
+                {isFree ? null : priceLabel(exhibition)}
+              </p>
+              {exhibition.museums?.name ? (
+                <p className="mt-1 flex min-w-0 items-center gap-1 text-sm text-muted-foreground">
+                  <MapPin className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{exhibition.museums.name}</span>
+                </p>
               ) : null}
-              {hours ? " · " : ""}
-              <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
-                {priceLabel(exhibition)}
-              </span>
-              {exhibition.museums?.name ? ` · ${exhibition.museums.name}` : ""}
-            </p>
+            </>
           ) : (
             <>
               <p className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground">
@@ -90,10 +98,8 @@ export function ExhibitionCard({
                     {closing ? ` – ${closing}` : ""}
                   </span>
                 ) : null}
-                {hours ? " · " : ""}
-                <span className={cn(exhibition.is_free && "text-petrol font-medium")}>
-                  {priceLabel(exhibition)}
-                </span>
+                {hours && !isFree ? " · " : ""}
+                {isFree ? null : priceLabel(exhibition)}
               </p>
             </>
           )}
@@ -101,6 +107,11 @@ export function ExhibitionCard({
             {status ? (
               <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-medium text-gold-foreground">
                 {status}
+              </span>
+            ) : null}
+            {isFree ? (
+              <span className="rounded-full border border-gold bg-gold/15 px-2 py-0.5 text-xs font-medium text-gold-foreground">
+                Gratuit
               </span>
             ) : null}
             {exhibition.exhibition_type ? (
