@@ -85,7 +85,7 @@ function ReservationPage() {
               <Link to="/tickets">Voir mes tickets</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link to="/upcoming">Retour à À venir</Link>
+              <Link to="/upcoming">Retour à Explorer</Link>
             </Button>
           </div>
         </div>

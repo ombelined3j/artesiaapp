@@ -41,8 +41,8 @@ function ProfilePage() {
       <p className="mb-6 text-muted-foreground">{user?.email}</p>
 
       <div className="space-y-2">
-        <Link to="/search" className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium">
-          <Search className="h-5 w-5 text-primary" /> Recherche et exploration
+        <Link to="/upcoming" className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium">
+          <Search className="h-5 w-5 text-primary" /> Explorer les expositions
         </Link>
       </div>
 
