@@ -86,7 +86,7 @@ function Landing() {
             },
             {
               icon: Sparkles,
-              title: "Pour vous",
+              title: "Les meilleures sorties culturelles pour vous",
                text: "Obtenez des recommandations selon vos préférences.\u00a0\u00a0",
             },
           ].map(({ icon: Icon, title, text }) => (
