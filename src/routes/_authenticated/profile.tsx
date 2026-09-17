@@ -1,10 +1,13 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { Loader2, RefreshCw, Search } from "lucide-react";
+import { toast } from "sonner";
 
 import { AppShell } from "@/components/artesia/AppShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { syncParisExhibitions } from "@/lib/paris-sync.functions";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
@@ -28,6 +31,16 @@ function ProfilePage() {
     queryFn: async () => (await supabase.auth.getUser()).data.user,
   });
 
+  const runSync = useServerFn(syncParisExhibitions);
+  const sync = useMutation({
+    mutationFn: () => runSync(),
+    onSuccess: (result) => {
+      void queryClient.invalidateQueries({ queryKey: ["exhibitions"] });
+      toast.success(`${result.imported} expositions à jour dans ${result.venues} lieux.`);
+    },
+    onError: () => toast.error("L'agenda de Paris n'a pas répondu. Réessayez plus tard."),
+  });
+
   async function handleSignOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
@@ -44,6 +57,19 @@ function ProfilePage() {
         <Link to="/upcoming" className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium">
           <Search className="h-5 w-5 text-primary" /> Explorer les expositions
         </Link>
+        <button
+          type="button"
+          onClick={() => sync.mutate()}
+          disabled={sync.isPending}
+          className="flex w-full items-center gap-3 rounded-2xl bg-card p-4 text-left font-medium disabled:opacity-70"
+        >
+          {sync.isPending ? (
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          ) : (
+            <RefreshCw className="h-5 w-5 text-primary" />
+          )}
+          {sync.isPending ? "Mise à jour en cours…" : "Actualiser les expositions de Paris"}
+        </button>
       </div>
 
       <Button variant="outline" className="mt-8 w-full" onClick={handleSignOut}>

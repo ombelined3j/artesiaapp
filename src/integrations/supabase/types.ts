@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      art_universes: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          source_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          source_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          source_id?: string | null
+        }
+        Relationships: []
+      }
+      artworks: {
+        Row: {
+          author: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          museum_id: string | null
+          museum_label: string | null
+          production_date: string | null
+          source_id: string
+          style: string | null
+          title: string
+        }
+        Insert: {
+          author?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          museum_id?: string | null
+          museum_label?: string | null
+          production_date?: string | null
+          source_id: string
+          style?: string | null
+          title: string
+        }
+        Update: {
+          author?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          museum_id?: string | null
+          museum_label?: string | null
+          production_date?: string | null
+          source_id?: string
+          style?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artworks_museum_id_fkey"
+            columns: ["museum_id"]
+            isOneToOne: false
+            referencedRelation: "museums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exhibition_views: {
         Row: {
           created_at: string
@@ -55,11 +123,15 @@ export type Database = {
           id: string
           image_url: string | null
           is_free: boolean
+          last_synced_at: string | null
           mood: string | null
           museum_id: string
           opening_time: string | null
           popularity: number
           price: number
+          price_detail: string | null
+          source: string
+          source_id: string | null
           start_date: string
           title: string
         }
@@ -74,11 +146,15 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_free?: boolean
+          last_synced_at?: string | null
           mood?: string | null
           museum_id: string
           opening_time?: string | null
           popularity?: number
           price?: number
+          price_detail?: string | null
+          source?: string
+          source_id?: string | null
           start_date: string
           title: string
         }
@@ -93,11 +169,15 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_free?: boolean
+          last_synced_at?: string | null
           mood?: string | null
           museum_id?: string
           opening_time?: string | null
           popularity?: number
           price?: number
+          price_detail?: string | null
+          source?: string
+          source_id?: string | null
           start_date?: string
           title?: string
         }
@@ -150,6 +230,7 @@ export type Database = {
           latitude: number | null
           longitude: number | null
           name: string
+          qfap_address_name: string | null
           website_url: string | null
         }
         Insert: {
@@ -161,6 +242,7 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           name: string
+          qfap_address_name?: string | null
           website_url?: string | null
         }
         Update: {
@@ -172,6 +254,7 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           name?: string
+          qfap_address_name?: string | null
           website_url?: string | null
         }
         Relationships: []
