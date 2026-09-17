@@ -174,7 +174,9 @@ function DiscoverPage() {
     results.filter((e) => e.start_date <= day && e.end_date >= day);
 
   const todayList = date ? [] : openOn(today);
-  const tomorrowList = date ? [] : openOn(tomorrow);
+  const tomorrowList = date
+    ? []
+    : openOn(tomorrow).filter((e) => !todayList.includes(e));
   const restList = date
     ? []
     : results.filter(
