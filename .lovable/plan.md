@@ -5,7 +5,7 @@ Fusion des pages « À venir » (Aujourd'hui / Demain) et « Explorer » (recher
 ## Ce que verra l'utilisateur
 
 - Une seule page de découverte, accessible depuis la barre du bas (l'entrée « Explorer » disparaît, l'onglet devient « Explorer »).
-- En haut : le logo Artesia et l'accès au profil.
+- En haut : le titre « Explorer » et l'accès au profil, sans logo.
 - Juste en dessous, une rangée de filtres qui défile horizontalement, reprise de la page Explorer :
   **Aujourd'hui · Demain · Agenda · Univers · Prix · Paris**
   - « Aujourd'hui » et « Demain » sont deux raccourcis de date : un tap affiche les expos du jour choisi.
