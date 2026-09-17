@@ -15,7 +15,6 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedForYouRouteImport } from './routes/_authenticated/for-you'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
 import { Route as AuthenticatedUpcomingRouteImport } from './routes/_authenticated/upcoming'
 import { Route as AuthenticatedExhibitionExhibitionIdRouteImport } from './routes/_authenticated/exhibition.$exhibitionId'
@@ -49,11 +48,6 @@ const AuthenticatedForYouRoute = AuthenticatedForYouRouteImport.update({
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
-  id: '/search',
-  path: '/search',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTicketsRoute = AuthenticatedTicketsRouteImport.update({
@@ -91,7 +85,6 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/for-you': typeof AuthenticatedForYouRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/search': typeof AuthenticatedSearchRoute
   '/tickets': typeof AuthenticatedTicketsRoute
   '/upcoming': typeof AuthenticatedUpcomingRoute
   '/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
@@ -104,7 +97,6 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/for-you': typeof AuthenticatedForYouRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/search': typeof AuthenticatedSearchRoute
   '/tickets': typeof AuthenticatedTicketsRoute
   '/upcoming': typeof AuthenticatedUpcomingRoute
   '/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
@@ -119,7 +111,6 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/for-you': typeof AuthenticatedForYouRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
   '/_authenticated/upcoming': typeof AuthenticatedUpcomingRoute
   '/_authenticated/exhibition/$exhibitionId': typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
@@ -134,7 +125,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/for-you'
     | '/profile'
-    | '/search'
     | '/tickets'
     | '/upcoming'
     | '/exhibition/$exhibitionId'
@@ -147,7 +137,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/for-you'
     | '/profile'
-    | '/search'
     | '/tickets'
     | '/upcoming'
     | '/exhibition/$exhibitionId'
@@ -161,7 +150,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/for-you'
     | '/_authenticated/profile'
-    | '/_authenticated/search'
     | '/_authenticated/tickets'
     | '/_authenticated/upcoming'
     | '/_authenticated/exhibition/$exhibitionId'
@@ -220,13 +208,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/search': {
-      id: '/_authenticated/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof AuthenticatedSearchRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/tickets': {
       id: '/_authenticated/tickets'
       path: '/tickets'
@@ -283,7 +264,6 @@ const AuthenticatedExhibitionExhibitionIdRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedForYouRoute: typeof AuthenticatedForYouRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
   AuthenticatedUpcomingRoute: typeof AuthenticatedUpcomingRoute
   AuthenticatedExhibitionExhibitionIdRoute: typeof AuthenticatedExhibitionExhibitionIdRouteWithChildren
@@ -293,7 +273,6 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedForYouRoute: AuthenticatedForYouRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedSearchRoute: AuthenticatedSearchRoute,
   AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
   AuthenticatedUpcomingRoute: AuthenticatedUpcomingRoute,
   AuthenticatedExhibitionExhibitionIdRoute:
