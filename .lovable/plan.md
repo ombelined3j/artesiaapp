@@ -22,6 +22,6 @@ Fusion des pages « À venir » (Aujourd'hui / Demain) et « Explorer » (recher
 - `src/routes/_authenticated/search.tsx` est remplacé par une simple redirection `beforeLoad` vers `/upcoming` (garde les liens existants valides).
 - `src/routes/_authenticated/profile.tsx` : le lien « Explorer » pointe vers `/upcoming`.
 - `src/components/artesia/BottomNav.tsx` : libellé de l'onglet `/upcoming` passé à « Explorer ».
-- Suppression du bouton loupe vers `/search` dans l'en-tête et du composant `FilterBar` s'il n'est plus utilisé ailleurs.
+- En-tête : suppression du logo et du bouton loupe vers `/search`, on garde le titre « Explorer » et l'icône profil. Suppression du composant `FilterBar` s'il n'est plus utilisé ailleurs.
 - Métadonnées `head()` de `/upcoming` mises à jour (titre/description de page de découverte).
 - Vérification : typecheck puis contrôle visuel mobile de la page et des trois tiroirs de filtres.
