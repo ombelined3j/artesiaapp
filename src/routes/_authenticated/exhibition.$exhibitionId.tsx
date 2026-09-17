@@ -1,6 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, CalendarDays, Clock, ExternalLink, Landmark, MapPin, Share2 } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Clock,
+  ExternalLink,
+  Landmark,
+  MapPin,
+  Share2,
+  Ticket,
+} from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -147,6 +156,15 @@ function ExhibitionDetail() {
                 {data.museums?.address ? (
                   <InfoRow icon={<MapPin className="h-5 w-5" />}>{data.museums.address}</InfoRow>
                 ) : null}
+                <InfoRow icon={<Ticket className="h-5 w-5" />}>
+                  <span className="font-medium">{priceLabel(data)}</span>
+                  {data.price_detail ? (
+                    <span className="mt-1 block whitespace-pre-line text-sm text-muted-foreground">
+                      {data.price_detail}
+                    </span>
+                  ) : null}
+                </InfoRow>
+
               </div>
 
               {data.description ? (

@@ -28,8 +28,13 @@ export type Exhibition = {
   exhibition_type: string | null;
   mood: string | null;
   popularity: number;
+  source: string;
+  source_id: string | null;
+  price_detail: string | null;
+  last_synced_at: string | null;
   museums: Museum | null;
 };
+
 
 export type Reservation = {
   id: string;
@@ -86,10 +91,12 @@ export function dateRangeLabel(
 }
 
 export function priceLabel(exhibition: Pick<Exhibition, "is_free" | "price">) {
-  return exhibition.is_free || Number(exhibition.price) === 0
-    ? "Gratuit"
-    : `${Number(exhibition.price).toFixed(2).replace(".", ",")} €`;
+  if (exhibition.is_free) return "Gratuit";
+  const price = Number(exhibition.price);
+  if (!price) return "Payant";
+  return `${price.toFixed(2).replace(".", ",")} €`;
 }
+
 
 export function statusLabel(exhibition: Exhibition, day: string) {
   if (exhibition.end_date === day) return "Dernier jour";
