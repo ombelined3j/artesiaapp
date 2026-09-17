@@ -52,7 +52,7 @@ function Landing() {
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
                Toutes les expos, vernissages et galeries, sélectionnés pour vous.
-                Réservation en un clic.&nbsp;
+                Réserver en quelques secondes.&nbsp;
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
