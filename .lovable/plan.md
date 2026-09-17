@@ -17,8 +17,8 @@ Fusion des pages « À venir » (Aujourd'hui / Demain) et « Explorer » (recher
 
 ## Détails techniques
 
-- `src/routes/_authenticated/upcoming.tsx` devient la page unique : on y déplace la logique de `search.tsx` (requête `fetchAllExhibitions`, filtres date / univers / prix / quartier, tri popularité, fiches `variant="poster"`).
-- Ajout de deux pastilles de date en tête de la rangée de filtres : `Aujourd'hui` → `isoDate(0)`, `Demain` → `isoDate(1)`, mutuellement exclusives avec la sélection du calendrier (même état `date`).
+- `src/routes/_authenticated/upcoming.tsx` devient la page unique : requête unique `fetchAllExhibitions`, filtres date / univers / prix / quartier de `search.tsx`, tri popularité, fiches `variant="poster"`.
+- Sections dérivées de la liste filtrée : `isoDate(0)` pour Aujourd'hui, `isoDate(1)` pour Demain (bornes `start_date`/`end_date`), le reste dans « Tout à venir ». Aucune pastille de raccourci de date.
 - `src/routes/_authenticated/search.tsx` est remplacé par une simple redirection `beforeLoad` vers `/upcoming` (garde les liens existants valides).
 - `src/routes/_authenticated/profile.tsx` : le lien « Explorer » pointe vers `/upcoming`.
 - `src/components/artesia/BottomNav.tsx` : libellé de l'onglet `/upcoming` passé à « Explorer ».
