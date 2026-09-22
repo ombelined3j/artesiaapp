@@ -48,11 +48,10 @@ function Landing() {
         <section className="grid items-center gap-10 py-10 md:grid-cols-2 md:py-16">
           <div>
             <h1 className="mt-4 text-4xl leading-tight md:text-5xl">
-              La meilleure façon de vivre l'art.&nbsp;
+              Découvrez et réservez les meilleurs expos.&nbsp;
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
-               Toutes les expos, vernissages et galeries, sélectionnés pour vous.
-                Réserver en quelques secondes.&nbsp;
+              Trouvez téléchargze Artsia et trouvez toutes les expos, vernissages et galeries autour de vous.&nbsp;
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -76,18 +75,18 @@ function Landing() {
           {[
             {
               icon: CalendarDays,
-               title: "Les évènements artistiques du moment à ne pas rater",
-                text: "Univers, date, horaires, prix : découvrez les meilleurs rendez-vous artistiques.",
+              title: "Les évènements artistiques du moment à ne pas rater",
+              text: "Découvrez les meilleurs rendez-vous artistiques.\n\n",
             },
             {
               icon: Ticket,
-               title: "Réservation en un clic",
-               text: "Réservez votre billet en quelques secondes et planifier vos sorties sans faire la queue. ",
+              title: "Réservation simplfiée",
+              text: "Réservez votre billet en quelques secondes et planifiez vos sorties sans faire la queue. ",
             },
             {
               icon: Sparkles,
-              title: "Les meilleures sorties culturelles pour vous",
-               text: "Obtenez des recommandations selon vos préférences.\u00a0\u00a0",
+              title: "Vous êtes artiste ? Trouvez votre public et vos clients. ",
+              text: "Développez votre communauté et trouvez vos prochains clients. ",
             },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-card p-5">
