@@ -90,11 +90,45 @@ export function dateRangeLabel(
   return `Jusqu'au ${formatDayShort(exhibition.end_date)}`;
 }
 
-export function priceLabel(exhibition: Pick<Exhibition, "is_free" | "price">) {
+function formatEuro(value: number) {
+  return Number.isInteger(value)
+    ? `${value} €`
+    : `${value.toFixed(2).replace(".", ",")} €`;
+}
+
+/** Extrait les montants d'un texte de tarif (« De 9 à 21 euros », « Tarif plein : 13 € »). */
+export function parsePriceRange(detail: string | null) {
+  if (!detail) return null;
+  const text = detail.replace(/\u00a0/g, " ");
+  const amounts: number[] = [];
+  const re = /(\d+(?:[.,]\d{1,2})?)\s*(?:€|euros?\b)/gi;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text))) {
+    const value = Number((match[1] ?? "").replace(",", "."));
+    if (value > 0) amounts.push(value);
+  }
+  // « De 0 à 15 euros » : le premier montant peut être omis par le motif ci-dessus.
+  const range = /\bde\s+(\d+(?:[.,]\d{1,2})?)\s+(?:à|a)\s+(\d+(?:[.,]\d{1,2})?)\s*(?:€|euros?\b)/i.exec(
+    text,
+  );
+  if (range) {
+    const low = Number((range[1] ?? "").replace(",", "."));
+    if (low > 0) amounts.push(low);
+  }
+  if (!amounts.length) return null;
+  return { min: Math.min(...amounts), max: Math.max(...amounts) };
+}
+
+export function priceLabel(
+  exhibition: Pick<Exhibition, "is_free" | "price"> & { price_detail?: string | null },
+) {
   if (exhibition.is_free) return "Gratuit";
   const price = Number(exhibition.price);
-  if (!price) return "Payant";
-  return `${price.toFixed(2).replace(".", ",")} €`;
+  if (price) return formatEuro(price);
+  const range = parsePriceRange(exhibition.price_detail ?? null);
+  if (!range) return "Payant";
+  if (range.min !== range.max) return `${formatEuro(range.min).replace(" €", "")}–${formatEuro(range.max)}`;
+  return formatEuro(range.min);
 }
 
 
