@@ -51,7 +51,7 @@ function Landing() {
               Découvrez et réservez les meilleurs expos.&nbsp;
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
-              Trouvez téléchargze Artsia et trouvez toutes les expos, vernissages et galeries autour de vous.&nbsp;
+              Téléchargez Artesia et trouvez toutes les expos, vernissages et galeries autour de vous.&nbsp;
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
