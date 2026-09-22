@@ -104,7 +104,7 @@ export function parsePriceRange(detail: string | null) {
   const re = /(\d+(?:[.,]\d{1,2})?)\s*(?:€|euros?\b)/gi;
   let match: RegExpExecArray | null;
   while ((match = re.exec(text))) {
-    const value = Number(match[1].replace(",", "."));
+    const value = Number((match[1] ?? "").replace(",", "."));
     if (value > 0) amounts.push(value);
   }
   // « De 0 à 15 euros » : le premier montant peut être omis par le motif ci-dessus.
@@ -112,7 +112,7 @@ export function parsePriceRange(detail: string | null) {
     text,
   );
   if (range) {
-    const low = Number(range[1].replace(",", "."));
+    const low = Number((range[1] ?? "").replace(",", "."));
     if (low > 0) amounts.push(low);
   }
   if (!amounts.length) return null;
