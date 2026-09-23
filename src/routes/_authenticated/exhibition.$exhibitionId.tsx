@@ -20,6 +20,7 @@ import { MuseumMap } from "@/components/artesia/MuseumMap";
 import { Button } from "@/components/ui/button";
 import {
   fetchExhibition,
+  fetchMuseumArtwork,
   formatDateFr,
   formatTime,
   priceLabel,
@@ -49,13 +50,7 @@ export const Route = createFileRoute("/_authenticated/exhibition/$exhibitionId")
   component: ExhibitionDetail,
 });
 
-function InfoRow({
-  icon,
-  children,
-}: {
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
+function InfoRow({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-4 border-b py-4 last:border-b-0">
       <span className="text-muted-foreground">{icon}</span>
@@ -91,17 +86,27 @@ function ExhibitionDetail() {
   };
 
   const heroImage = exhibitionImage(data);
-
+  const museumId = data?.museums?.id ?? null;
+  const { data: artwork } = useQuery({
+    queryKey: ["museum-artwork", museumId],
+    queryFn: () => fetchMuseumArtwork(museumId!),
+    enabled: !heroImage && !!museumId,
+  });
+  const displayImage = heroImage ?? artwork?.image_url ?? null;
 
   return (
     <div className="min-h-screen bg-background pb-40">
       <div className="mx-auto max-w-2xl">
         <div className="relative">
           <div className="aspect-[4/3] w-full overflow-hidden bg-muted sm:aspect-[16/9] sm:rounded-b-3xl">
-            {heroImage ? (
+            {displayImage ? (
               <img
-                src={heroImage}
-                alt={data?.title ?? "Exposition"}
+                src={displayImage}
+                alt={
+                  heroImage
+                    ? (data?.title ?? "Exposition")
+                    : (artwork?.title ?? "Œuvre de la collection")
+                }
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -109,8 +114,13 @@ function ExhibitionDetail() {
                 {data?.museums?.name ?? data?.title}
               </div>
             )}
-
           </div>
+          {!heroImage && artwork ? (
+            <p className="px-4 pt-1.5 text-xs text-muted-foreground sm:px-0">
+              Œuvre de la collection : <span className="italic">{artwork.title}</span>
+              {artwork.author ? ` — ${artwork.author}` : ""}
+            </p>
+          ) : null}
           <div className="absolute inset-x-4 top-4 flex items-center justify-between">
             <button
               type="button"
@@ -143,12 +153,10 @@ function ExhibitionDetail() {
               <h1 className="text-3xl leading-tight">{data.title}</h1>
               <p className="mt-1 text-lg text-muted-foreground">{data.museums?.name}</p>
 
-
               <div className="mt-6">
                 <InfoRow icon={<CalendarDays className="h-5 w-5" />}>
                   <span className="text-primary">Du {formatDateFr(data.start_date)}</span>{" "}
-                  <span className="text-muted-foreground">au</span>{" "}
-                  {formatDateFr(data.end_date)}
+                  <span className="text-muted-foreground">au</span> {formatDateFr(data.end_date)}
                 </InfoRow>
                 <InfoRow icon={<Clock className="h-5 w-5" />}>
                   {formatTime(data.opening_time) ?? "Horaires à confirmer"}
@@ -176,7 +184,6 @@ function ExhibitionDetail() {
                     </span>
                   ) : null}
                 </InfoRow>
-
               </div>
 
               {data.description ? (

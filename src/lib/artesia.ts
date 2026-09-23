@@ -201,6 +201,30 @@ export async function fetchMuseums() {
   return (data ?? []) as unknown as Museum[];
 }
 
+export type Artwork = {
+  id: string;
+  museum_id: string | null;
+  museum_label: string | null;
+  title: string;
+  author: string | null;
+  production_date: string | null;
+  style: string | null;
+  image_url: string | null;
+};
+
+/** Une œuvre illustrée de la collection du musée, en repli quand l'exposition n'a pas d'image. */
+export async function fetchMuseumArtwork(museumId: string) {
+  const { data, error } = await supabase
+    .from("artworks")
+    .select("*")
+    .eq("museum_id", museumId)
+    .not("image_url", "is", null)
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return (data ?? null) as unknown as Artwork | null;
+}
+
 /** Identifiant de l'utilisateur connecté, requis par les règles d'accès. */
 export async function requireUserId() {
   const { data, error } = await supabase.auth.getUser();

@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, RefreshCw, Search } from "lucide-react";
+import { Loader2, Palette, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/artesia/AppShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { syncParisExhibitions } from "@/lib/paris-sync.functions";
+import { syncParisMuseesArtworks } from "@/lib/parismusees.functions";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
@@ -41,6 +42,25 @@ function ProfilePage() {
     onError: () => toast.error("L'agenda de Paris n'a pas répondu. Réessayez plus tard."),
   });
 
+  const runArtworksSync = useServerFn(syncParisMuseesArtworks);
+  const artworksSync = useMutation({
+    mutationFn: () => runArtworksSync(),
+    onSuccess: (result) => {
+      void queryClient.invalidateQueries({ queryKey: ["artworks"] });
+      const detail =
+        result.failures.length > 0
+          ? ` (${result.failures.length} musée${result.failures.length > 1 ? "s" : ""} indisponible${result.failures.length > 1 ? "s" : ""})`
+          : "";
+      toast.success(
+        `${result.imported} œuvres à jour pour ${result.matchedMuseums} musées, ${result.universes} univers.${detail}`,
+      );
+    },
+    onError: (error) =>
+      toast.error(
+        error instanceof Error ? error.message : "La synchronisation Paris Musées a échoué.",
+      ),
+  });
+
   async function handleSignOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
@@ -54,7 +74,10 @@ function ProfilePage() {
       <p className="mb-6 text-muted-foreground">{user?.email}</p>
 
       <div className="space-y-2">
-        <Link to="/upcoming" className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium">
+        <Link
+          to="/upcoming"
+          className="flex items-center gap-3 rounded-2xl bg-card p-4 font-medium"
+        >
           <Search className="h-5 w-5 text-primary" /> Explorer les expositions
         </Link>
         <button
@@ -69,6 +92,19 @@ function ProfilePage() {
             <RefreshCw className="h-5 w-5 text-primary" />
           )}
           {sync.isPending ? "Mise à jour en cours…" : "Actualiser les expositions de Paris"}
+        </button>
+        <button
+          type="button"
+          onClick={() => artworksSync.mutate()}
+          disabled={artworksSync.isPending}
+          className="flex w-full items-center gap-3 rounded-2xl bg-card p-4 text-left font-medium disabled:opacity-70"
+        >
+          {artworksSync.isPending ? (
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          ) : (
+            <Palette className="h-5 w-5 text-primary" />
+          )}
+          {artworksSync.isPending ? "Mise à jour en cours…" : "Actualiser les œuvres Paris Musées"}
         </button>
       </div>
 
