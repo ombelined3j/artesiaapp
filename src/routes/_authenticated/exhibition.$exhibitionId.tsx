@@ -7,6 +7,7 @@ import {
   ExternalLink,
   Landmark,
   MapPin,
+  Moon,
   Share2,
   Ticket,
 } from "lucide-react";
@@ -153,6 +154,16 @@ function ExhibitionDetail() {
                   {formatTime(data.opening_time) ?? "Horaires à confirmer"}
                   {data.closing_time ? ` – ${formatTime(data.closing_time)}` : ""}
                 </InfoRow>
+                {nocturneLines(data.museums?.name).length > 0 ? (
+                  <InfoRow icon={<Moon className="h-5 w-5" />}>
+                    <span className="font-medium">Nocturnes</span>
+                    {nocturneLines(data.museums?.name).map((line) => (
+                      <span key={line} className="block text-sm text-muted-foreground">
+                        {line}
+                      </span>
+                    ))}
+                  </InfoRow>
+                ) : null}
                 <InfoRow icon={<Landmark className="h-5 w-5" />}>{data.museums?.name}</InfoRow>
                 {data.museums?.address ? (
                   <InfoRow icon={<MapPin className="h-5 w-5" />}>{data.museums.address}</InfoRow>
@@ -168,21 +179,11 @@ function ExhibitionDetail() {
 
               </div>
 
-              {data.description || nocturneLines(data.museums?.name).length > 0 ? (
+              {data.description ? (
                 <section className="mt-8">
                   <SectionTitle>Description</SectionTitle>
                   {data.description ? (
                     <p className="leading-relaxed whitespace-pre-line">{data.description}</p>
-                  ) : null}
-                  {nocturneLines(data.museums?.name).length > 0 ? (
-                    <div className="mt-4 rounded-2xl bg-secondary p-4">
-                      <p className="font-medium">Nocturnes</p>
-                      <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
-                        {nocturneLines(data.museums?.name).map((line) => (
-                          <li key={line}>{line}</li>
-                        ))}
-                      </ul>
-                    </div>
                   ) : null}
                 </section>
               ) : null}
