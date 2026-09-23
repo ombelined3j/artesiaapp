@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { fr } from "date-fns/locale";
-import { CalendarDays, MapPin, Palette, Tag, User } from "lucide-react";
+import { Building2, CalendarDays, MapPin, Palette, Tag, User } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import {
@@ -52,6 +52,21 @@ export const Route = createFileRoute("/_authenticated/upcoming")({
   }),
   component: DiscoverPage,
 });
+
+type VenueKind = "musee" | "galerie" | "atelier";
+const VENUE_LABELS: Record<VenueKind, string> = {
+  musee: "Musée",
+  galerie: "Galerie",
+  atelier: "Atelier",
+};
+
+/** Type de lieu déduit du nom (aucune colonne dédiée en base). */
+function venueKind(name: string | undefined | null): VenueKind {
+  const n = (name ?? "").toLowerCase();
+  if (n.includes("galerie") || n.includes("gallery")) return "galerie";
+  if (n.includes("atelier") || n.includes("studio")) return "atelier";
+  return "musee";
+}
 
 type PriceMode = "all" | "free" | "max15" | "custom";
 
@@ -174,6 +189,7 @@ function DiscoverPage() {
   const today = isoDate(0);
 
   const [district, setDistrict] = useState("all");
+  const [venue, setVenue] = useState<"all" | VenueKind>("all");
   const [dateFilter, setDateFilter] = useState<DateFilter | null>(null);
   const [universes, setUniverses] = useState<string[]>([]);
   const [priceMode, setPriceMode] = useState<PriceMode>("all");
@@ -225,11 +241,12 @@ function DiscoverPage() {
         (priceMode === "max15" && price <= 15) ||
         (priceMode === "custom" && price <= maxPrice);
       const matchesDistrict = district === "all" || exhibition.museums?.district === district;
-      return matchesDay && matchesUnivers && matchesPrice && matchesDistrict;
+      const matchesVenue = venue === "all" || venueKind(exhibition.museums?.name) === venue;
+      return matchesDay && matchesUnivers && matchesPrice && matchesDistrict && matchesVenue;
     });
 
     return [...filtered].sort((a, b) => b.popularity - a.popularity);
-  }, [exhibitions, dateFilter, universes, priceMode, maxPrice, district, today]);
+  }, [exhibitions, dateFilter, universes, priceMode, maxPrice, district, venue, today]);
 
   const { buckets, later } = useMemo(() => bucketByWeek(results, today), [results, today]);
 
@@ -462,6 +479,21 @@ function DiscoverPage() {
             </div>
           </DrawerContent>
         </Drawer>
+
+        <Select value={venue} onValueChange={(v) => setVenue(v as "all" | VenueKind)}>
+          <SelectTrigger aria-label="Lieux" className={cn(pill, venue !== "all" && pillActive)}>
+            <Building2 className="h-4 w-4" />
+            <SelectValue placeholder="Lieux">
+              {venue === "all" ? "Lieux" : VENUE_LABELS[venue]}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les lieux</SelectItem>
+            <SelectItem value="musee">Musée</SelectItem>
+            <SelectItem value="galerie">Galerie</SelectItem>
+            <SelectItem value="atelier">Atelier</SelectItem>
+          </SelectContent>
+        </Select>
 
         <Select value={district} onValueChange={setDistrict}>
           <SelectTrigger
