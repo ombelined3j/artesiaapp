@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Json } from "@/integrations/supabase/types";
 
 const DATASET =
   "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records";
@@ -26,22 +27,74 @@ const UNIVERSE_TAGS = [
   "Street art",
 ];
 
+type QfapLocation = {
+  address_street?: string | null;
+  address_zipCode?: string | null;
+  address_name?: string | null;
+  address_lat_lon?: string | null;
+  [key: string]: unknown;
+};
+
 type QfapRecord = {
   id: string;
+  event_id: number | null;
   title: string | null;
   lead_text: string | null;
   description: string | null;
   date_start: string | null;
   date_end: string | null;
+  occurrences: string | null;
+  date_description: string | null;
   cover_url: string | null;
+  cover_alt: string | null;
+  cover_credit: string | null;
+  locations: QfapLocation[] | null;
   address_name: string | null;
   address_street: string | null;
   address_zipcode: string | null;
   lat_lon: { lat: number; lon: number } | null;
+  pmr: number | boolean | null;
+  blind: number | boolean | null;
+  deaf: number | boolean | null;
+  sign_language: number | boolean | null;
+  mental: number | boolean | null;
+  transport: string | null;
+  contact_url: string | null;
+  contact_phone: string | null;
+  contact_mail: string | null;
+  contact_organisation_name: string | null;
+  contact_facebook: string | null;
+  contact_twitter: string | null;
+  contact_instagram: string | null;
+  contact_tiktok: string | null;
+  contact_youtube: string | null;
+  contact_linkedin: string | null;
+  contact_snapchat: string | null;
+  contact_whatsapp: string | null;
+  contact_messenger: string | null;
+  contact_pinterest: string | null;
+  contact_soundcloud: string | null;
+  contact_spotify: string | null;
+  contact_deezer: string | null;
+  contact_vimeo: string | null;
+  contact_twitch: string | null;
+  contact_bandcamp: string | null;
   price_type: string | null;
   price_detail: string | null;
+  access_type: string | null;
   access_link: string | null;
+  access_link_text: string | null;
   url: string | null;
+  programs: string | null;
+  audience: string | null;
+  childrens: number | boolean | null;
+  group: string | null;
+  universe_tags: string | null;
+  univers: string | null;
+  event_indoor: number | boolean | null;
+  event_pets_allowed: number | boolean | null;
+  updated_at: string | null;
+  weight: number | null;
   qfap_tags: string | null;
   rank: number | null;
 };
@@ -90,6 +143,80 @@ function universeOf(record: QfapRecord) {
   return match ?? tags[0] ?? null;
 }
 
+function toBool(value: number | boolean | null | undefined) {
+  if (value === null || value === undefined) return null;
+  if (typeof value === "boolean") return value;
+  return value === 1;
+}
+
+/** « 2026-10-24T20:00:00+02:00_2026-10-24T22:00:00+02:00;... » → [{start, end}]. */
+function parseOccurrences(value: string | null) {
+  if (!value) return null;
+  const slots = value
+    .split(";")
+    .map((pair) => pair.trim())
+    .filter(Boolean)
+    .map((pair) => {
+      const [start, end] = pair.split("_");
+      return start ? { start, end: end ?? start } : null;
+    })
+    .filter((slot): slot is { start: string; end: string } => slot !== null);
+  return slots.length > 0 ? slots : null;
+}
+
+/** « Nom du programme (https://…);Autre programme (https://…) » → [{name, url}]. */
+function parsePrograms(value: string | null) {
+  if (!value) return null;
+  const items = value
+    .split(";")
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const match = /^(.*?)\s*\(([^)]+)\)$/.exec(entry);
+      return match ? { name: match[1], url: match[2] } : { name: entry, url: null };
+    });
+  return items.length > 0 ? items : null;
+}
+
+const SOCIAL_FIELDS = [
+  "facebook",
+  "twitter",
+  "instagram",
+  "tiktok",
+  "youtube",
+  "linkedin",
+  "snapchat",
+  "whatsapp",
+  "messenger",
+  "pinterest",
+  "soundcloud",
+  "spotify",
+  "deezer",
+  "vimeo",
+  "twitch",
+  "bandcamp",
+] as const;
+
+function socialsOf(record: QfapRecord) {
+  const socials: Record<string, string> = {};
+  for (const platform of SOCIAL_FIELDS) {
+    const value = record[`contact_${platform}` as keyof QfapRecord];
+    if (typeof value === "string" && value.trim()) socials[platform] = value.trim();
+  }
+  return Object.keys(socials).length > 0 ? socials : null;
+}
+
+function accessibilityOf(record: QfapRecord) {
+  const accessibility = {
+    pmr: toBool(record.pmr),
+    blind: toBool(record.blind),
+    deaf: toBool(record.deaf),
+    sign_language: toBool(record.sign_language),
+    mental: toBool(record.mental),
+  };
+  return Object.values(accessibility).some((v) => v !== null) ? accessibility : null;
+}
+
 async function fetchRecords() {
   const today = new Date().toISOString().slice(0, 10);
   const records: QfapRecord[] = [];
@@ -131,12 +258,10 @@ export const syncParisExhibitions = createServerFn({ method: "POST" })
       if (universe) universes.add(universe);
     }
     if (universes.size > 0) {
-      await supabaseAdmin
-        .from("art_universes")
-        .upsert(
-          [...universes].map((name) => ({ name })),
-          { onConflict: "name" },
-        );
+      await supabaseAdmin.from("art_universes").upsert(
+        [...universes].map((name) => ({ name })),
+        { onConflict: "name" },
+      );
     }
 
     // 2. Lieux : on réutilise les musées existants quand le nom correspond.
@@ -207,6 +332,34 @@ export const syncParisExhibitions = createServerFn({ method: "POST" })
           source: SOURCE,
           source_id: record.id,
           last_synced_at: now,
+          // Full record capture beyond the fields above.
+          source_event_id: record.event_id ?? null,
+          source_updated_at: record.updated_at ?? null,
+          date_description: stripHtml(record.date_description),
+          occurrences: parseOccurrences(record.occurrences),
+          locations:
+            record.locations && record.locations.length > 0
+              ? (record.locations as unknown as Json)
+              : null,
+          access_type: record.access_type,
+          access_link_text: record.access_link_text,
+          contact_url: record.contact_url,
+          contact_phone: record.contact_phone,
+          contact_mail: record.contact_mail,
+          contact_organisation_name: record.contact_organisation_name,
+          socials: socialsOf(record),
+          cover_alt: record.cover_alt,
+          cover_credit: record.cover_credit,
+          programs: parsePrograms(record.programs),
+          audience: stripHtml(record.audience),
+          organizer_group: record.group,
+          universe_tags_raw: record.universe_tags ?? record.univers,
+          childrens: toBool(record.childrens),
+          event_indoor: toBool(record.event_indoor),
+          event_pets_allowed: toBool(record.event_pets_allowed),
+          accessibility: accessibilityOf(record),
+          transport: stripHtml(record.transport),
+          weight: record.weight ?? null,
         };
       })
       .filter((row): row is NonNullable<typeof row> => row !== null);
@@ -222,5 +375,4 @@ export const syncParisExhibitions = createServerFn({ method: "POST" })
     }
 
     return { imported, venues: byKey.size, universes: universes.size };
-
   });

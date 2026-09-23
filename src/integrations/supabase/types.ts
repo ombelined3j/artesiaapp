@@ -113,73 +113,145 @@ export type Database = {
       }
       exhibitions: {
         Row: {
+          access_link_text: string | null
+          access_type: string | null
+          accessibility: Json | null
+          audience: string | null
           bookable: boolean
           booking_url: string | null
+          childrens: boolean | null
           closing_time: string | null
+          contact_mail: string | null
+          contact_organisation_name: string | null
+          contact_phone: string | null
+          contact_url: string | null
+          cover_alt: string | null
+          cover_credit: string | null
           created_at: string
+          date_description: string | null
           description: string | null
           end_date: string
+          event_indoor: boolean | null
+          event_pets_allowed: boolean | null
           exhibition_type: string | null
           id: string
           image_url: string | null
           is_free: boolean
           last_synced_at: string | null
+          locations: Json | null
           mood: string | null
           museum_id: string
+          occurrences: Json | null
           opening_time: string | null
+          organizer_group: string | null
           popularity: number
           price: number
           price_detail: string | null
+          programs: Json | null
+          socials: Json | null
           source: string
+          source_event_id: number | null
           source_id: string | null
+          source_updated_at: string | null
           start_date: string
           title: string
+          transport: string | null
+          universe_tags_raw: string | null
+          weight: number | null
         }
         Insert: {
+          access_link_text?: string | null
+          access_type?: string | null
+          accessibility?: Json | null
+          audience?: string | null
           bookable?: boolean
           booking_url?: string | null
+          childrens?: boolean | null
           closing_time?: string | null
+          contact_mail?: string | null
+          contact_organisation_name?: string | null
+          contact_phone?: string | null
+          contact_url?: string | null
+          cover_alt?: string | null
+          cover_credit?: string | null
           created_at?: string
+          date_description?: string | null
           description?: string | null
           end_date: string
+          event_indoor?: boolean | null
+          event_pets_allowed?: boolean | null
           exhibition_type?: string | null
           id?: string
           image_url?: string | null
           is_free?: boolean
           last_synced_at?: string | null
+          locations?: Json | null
           mood?: string | null
           museum_id: string
+          occurrences?: Json | null
           opening_time?: string | null
+          organizer_group?: string | null
           popularity?: number
           price?: number
           price_detail?: string | null
+          programs?: Json | null
+          socials?: Json | null
           source?: string
+          source_event_id?: number | null
           source_id?: string | null
+          source_updated_at?: string | null
           start_date: string
           title: string
+          transport?: string | null
+          universe_tags_raw?: string | null
+          weight?: number | null
         }
         Update: {
+          access_link_text?: string | null
+          access_type?: string | null
+          accessibility?: Json | null
+          audience?: string | null
           bookable?: boolean
           booking_url?: string | null
+          childrens?: boolean | null
           closing_time?: string | null
+          contact_mail?: string | null
+          contact_organisation_name?: string | null
+          contact_phone?: string | null
+          contact_url?: string | null
+          cover_alt?: string | null
+          cover_credit?: string | null
           created_at?: string
+          date_description?: string | null
           description?: string | null
           end_date?: string
+          event_indoor?: boolean | null
+          event_pets_allowed?: boolean | null
           exhibition_type?: string | null
           id?: string
           image_url?: string | null
           is_free?: boolean
           last_synced_at?: string | null
+          locations?: Json | null
           mood?: string | null
           museum_id?: string
+          occurrences?: Json | null
           opening_time?: string | null
+          organizer_group?: string | null
           popularity?: number
           price?: number
           price_detail?: string | null
+          programs?: Json | null
+          socials?: Json | null
           source?: string
+          source_event_id?: number | null
           source_id?: string | null
+          source_updated_at?: string | null
           start_date?: string
           title?: string
+          transport?: string | null
+          universe_tags_raw?: string | null
+          weight?: number | null
         }
         Relationships: [
           {

@@ -55,7 +55,13 @@ export const Route = createFileRoute("/_authenticated/upcoming")({
 
 type PriceMode = "all" | "free" | "max15" | "custom";
 
+/** Filtre de date actif : un jour précis (calendrier) ou une plage nommée (semaine). */
+type DateFilter =
+  { kind: "day"; value: string } | { kind: "range"; start: string; end: string; label: string };
+
 const INITIAL_COUNT = 3;
+/** Nombre de sections hebdomadaires affichées après "Ce week-end" avant le bloc "Plus tard". */
+const MAX_WEEKS_AHEAD = 6;
 
 /** Conversion Date -> chaîne ISO locale (aucun décalage de fuseau). */
 function toIso(date: Date) {
@@ -70,6 +76,63 @@ function mondayOf(date: Date) {
   const shift = (d.getDay() + 6) % 7;
   d.setDate(d.getDate() - shift);
   return d;
+}
+
+function addDays(date: Date, days: number) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+type Bucket = { key: string; label: string; day: string; exhibitions: Exhibition[] };
+
+/**
+ * Regroupe les expositions encore ouvertes en Aujourd'hui / Demain / Ce week-end,
+ * puis en tranches hebdomadaires datées, sans doublon d'une section à l'autre.
+ */
+function bucketByWeek(
+  exhibitions: Exhibition[],
+  today: string,
+): { buckets: Bucket[]; later: Exhibition[] } {
+  const used = new Set<string>();
+  const take = (predicate: (e: Exhibition) => boolean) => {
+    const matched = exhibitions.filter((e) => !used.has(e.id) && predicate(e));
+    matched.forEach((e) => used.add(e.id));
+    return matched;
+  };
+  const openOnDay = (day: string) => (e: Exhibition) => e.start_date <= day && e.end_date >= day;
+  const openInRange = (start: string, end: string) => (e: Exhibition) =>
+    e.start_date <= end && e.end_date >= start;
+
+  const tomorrow = isoDate(1);
+  const buckets: Bucket[] = [
+    { key: "today", label: "Aujourd'hui", day: today, exhibitions: take(openOnDay(today)) },
+    { key: "tomorrow", label: "Demain", day: tomorrow, exhibitions: take(openOnDay(tomorrow)) },
+  ];
+
+  const monday = mondayOf(new Date(`${today}T12:00:00`));
+  const saturday = toIso(addDays(monday, 5));
+  const sunday = toIso(addDays(monday, 6));
+  buckets.push({
+    key: "weekend",
+    label: "Ce week-end",
+    day: saturday,
+    exhibitions: take(openInRange(saturday, sunday)),
+  });
+
+  for (let week = 1; week <= MAX_WEEKS_AHEAD; week += 1) {
+    const start = toIso(addDays(monday, week * 7));
+    const end = toIso(addDays(monday, week * 7 + 6));
+    buckets.push({
+      key: `week-${week}`,
+      label: `Semaine du ${formatDayShort(start)} au ${formatDayShort(end)}`,
+      day: start,
+      exhibitions: take(openInRange(start, end)),
+    });
+  }
+
+  const later = exhibitions.filter((e) => !used.has(e.id));
+  return { buckets, later };
 }
 
 function DaySection({
@@ -109,10 +172,9 @@ function DaySection({
 
 function DiscoverPage() {
   const today = isoDate(0);
-  const tomorrow = isoDate(1);
 
   const [district, setDistrict] = useState("all");
-  const [date, setDate] = useState<string | null>(null);
+  const [dateFilter, setDateFilter] = useState<DateFilter | null>(null);
   const [universes, setUniverses] = useState<string[]>([]);
   const [priceMode, setPriceMode] = useState<PriceMode>("all");
   const [maxPrice, setMaxPrice] = useState(30);
@@ -129,9 +191,7 @@ function DiscoverPage() {
   const exhibitions = data ?? [];
   const types = useMemo(
     () => [
-      ...new Set(
-        exhibitions.map((e) => e.exhibition_type).filter((v): v is string => Boolean(v)),
-      ),
+      ...new Set(exhibitions.map((e) => e.exhibition_type).filter((v): v is string => Boolean(v))),
     ],
     [exhibitions],
   );
@@ -149,11 +209,12 @@ function DiscoverPage() {
   );
 
   const results = useMemo(() => {
-    const day = date ?? today;
     const filtered = exhibitions.filter((exhibition) => {
-      const matchesDay = date
-        ? exhibition.start_date <= day && exhibition.end_date >= day
-        : exhibition.end_date >= today;
+      const matchesDay = !dateFilter
+        ? exhibition.end_date >= today
+        : dateFilter.kind === "day"
+          ? exhibition.start_date <= dateFilter.value && exhibition.end_date >= dateFilter.value
+          : exhibition.start_date <= dateFilter.end && exhibition.end_date >= dateFilter.start;
       const matchesUnivers =
         universes.length === 0 ||
         (exhibition.exhibition_type && universes.includes(exhibition.exhibition_type));
@@ -168,20 +229,9 @@ function DiscoverPage() {
     });
 
     return [...filtered].sort((a, b) => b.popularity - a.popularity);
-  }, [exhibitions, date, universes, priceMode, maxPrice, district, today]);
+  }, [exhibitions, dateFilter, universes, priceMode, maxPrice, district, today]);
 
-  const openOn = (day: string) =>
-    results.filter((e) => e.start_date <= day && e.end_date >= day);
-
-  const todayList = date ? [] : openOn(today);
-  const tomorrowList = date
-    ? []
-    : openOn(tomorrow).filter((e) => !todayList.includes(e));
-  const restList = date
-    ? []
-    : results.filter(
-        (e) => !todayList.includes(e) && !tomorrowList.includes(e),
-      );
+  const { buckets, later } = useMemo(() => bucketByWeek(results, today), [results, today]);
 
   const pill =
     "inline-flex h-10 w-auto shrink-0 items-center gap-1.5 rounded-full border bg-transparent px-4 text-sm whitespace-nowrap";
@@ -198,11 +248,13 @@ function DiscoverPage() {
           ? `Max ${maxPrice} €`
           : "Prix";
 
-  const jumpTo = (offsetWeeks: number) => {
+  /** "Cette semaine" part de aujourd'hui ; "Semaine prochaine" couvre lundi -> dimanche suivant. */
+  const jumpToWeek = (offsetWeeks: number, label: string) => {
     const monday = mondayOf(new Date());
     monday.setDate(monday.getDate() + offsetWeeks * 7);
-    const target = offsetWeeks === 0 && monday < new Date() ? new Date() : monday;
-    setDate(toIso(target));
+    const start = offsetWeeks === 0 ? today : toIso(monday);
+    const end = toIso(addDays(monday, 6));
+    setDateFilter({ kind: "range", start, end, label });
     setAgendaOpen(false);
   };
 
@@ -220,9 +272,17 @@ function DiscoverPage() {
       <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
         <Drawer open={agendaOpen} onOpenChange={setAgendaOpen}>
           <DrawerTrigger asChild>
-            <button type="button" aria-label="Agenda" className={cn(pill, date && pillActive)}>
+            <button
+              type="button"
+              aria-label="Agenda"
+              className={cn(pill, dateFilter && pillActive)}
+            >
               <CalendarDays className="h-4 w-4" />
-              {date ? formatDayShort(date) : "Agenda"}
+              {!dateFilter
+                ? "Agenda"
+                : dateFilter.kind === "day"
+                  ? formatDayShort(dateFilter.value)
+                  : dateFilter.label}
             </button>
           </DrawerTrigger>
           <DrawerContent>
@@ -230,18 +290,36 @@ function DiscoverPage() {
               <DrawerTitle>Aller à</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-wrap gap-2 px-4">
-              <button type="button" className={chip} onClick={() => jumpTo(0)}>
+              <button
+                type="button"
+                className={cn(
+                  chip,
+                  dateFilter?.kind === "range" &&
+                    dateFilter.label === "Cette semaine" &&
+                    chipActive,
+                )}
+                onClick={() => jumpToWeek(0, "Cette semaine")}
+              >
                 Cette semaine
               </button>
-              <button type="button" className={chip} onClick={() => jumpTo(1)}>
+              <button
+                type="button"
+                className={cn(
+                  chip,
+                  dateFilter?.kind === "range" &&
+                    dateFilter.label === "Semaine prochaine" &&
+                    chipActive,
+                )}
+                onClick={() => jumpToWeek(1, "Semaine prochaine")}
+              >
                 Semaine prochaine
               </button>
-              {date ? (
+              {dateFilter ? (
                 <button
                   type="button"
                   className={chip}
                   onClick={() => {
-                    setDate(null);
+                    setDateFilter(null);
                     setAgendaOpen(false);
                   }}
                 >
@@ -253,11 +331,13 @@ function DiscoverPage() {
               <Calendar
                 mode="single"
                 locale={fr}
-                selected={date ? new Date(`${date}T12:00:00`) : undefined}
+                selected={
+                  dateFilter?.kind === "day" ? new Date(`${dateFilter.value}T12:00:00`) : undefined
+                }
                 disabled={{ before: new Date(`${today}T00:00:00`) }}
                 onSelect={(value) => {
                   if (!value) return;
-                  setDate(toIso(value));
+                  setDateFilter({ kind: "day", value: toIso(value) });
                   setAgendaOpen(false);
                 }}
                 className="pointer-events-auto p-3"
@@ -385,9 +465,7 @@ function DiscoverPage() {
             className={cn(pill, district !== "all" && pillActive)}
           >
             <MapPin className="h-4 w-4" />
-            <SelectValue placeholder="Paris">
-              {district === "all" ? "Paris" : district}
-            </SelectValue>
+            <SelectValue placeholder="Paris">{district === "all" ? "Paris" : district}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tout Paris</SelectItem>
@@ -410,7 +488,7 @@ function DiscoverPage() {
             title="Aucun résultat"
             description="Essayez une autre date ou élargissez vos filtres."
           />
-        ) : date ? (
+        ) : dateFilter ? (
           <>
             <SectionTitle>
               {results.length} exposition{results.length > 1 ? "s" : ""}
@@ -418,22 +496,32 @@ function DiscoverPage() {
             <div className="divide-y">
               {results.map((exhibition) => (
                 <div key={exhibition.id} className="py-4 first:pt-0">
-                  <ExhibitionCard exhibition={exhibition} day={date} variant="poster" />
+                  <ExhibitionCard
+                    exhibition={exhibition}
+                    day={dateFilter.kind === "day" ? dateFilter.value : dateFilter.start}
+                    variant="poster"
+                  />
                 </div>
               ))}
             </div>
           </>
         ) : (
           <>
-            <DaySection label="Aujourd'hui" day={today} exhibitions={todayList} />
-            <DaySection label="Demain" day={tomorrow} exhibitions={tomorrowList} />
-            {restList.length > 0 ? (
+            {buckets.map((bucket) => (
+              <DaySection
+                key={bucket.key}
+                label={bucket.label}
+                day={bucket.day}
+                exhibitions={bucket.exhibitions}
+              />
+            ))}
+            {later.length > 0 ? (
               <section className="mb-10">
                 <SectionTitle>
-                  Tout à venir · {restList.length} exposition{restList.length > 1 ? "s" : ""}
+                  Plus tard · {later.length} exposition{later.length > 1 ? "s" : ""}
                 </SectionTitle>
                 <div className="divide-y">
-                  {restList.map((exhibition) => (
+                  {later.map((exhibition) => (
                     <div key={exhibition.id} className="py-4 first:pt-0">
                       <ExhibitionCard
                         exhibition={exhibition}

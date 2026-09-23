@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarDays, Sparkles, Ticket } from "lucide-react";
 
-import heroAsset from "@/assets/hero-artesia.webp.asset.json";
+import heroImage from "@/assets/hero-artesia.webp";
 import { Logo } from "@/components/artesia/Logo";
 import { Button } from "@/components/ui/button";
 
@@ -26,8 +26,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Landing,
 });
-
-const heroImage = heroAsset.url;
 
 function Landing() {
   return (

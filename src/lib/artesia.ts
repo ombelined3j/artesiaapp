@@ -33,8 +33,38 @@ export type Exhibition = {
   price_detail: string | null;
   last_synced_at: string | null;
   museums: Museum | null;
+  // Full "que-faire-a-paris" record capture — only populated for synced exhibitions.
+  source_event_id: number | null;
+  source_updated_at: string | null;
+  date_description: string | null;
+  occurrences: { start: string; end: string }[] | null;
+  locations: Record<string, unknown>[] | null;
+  access_type: string | null;
+  access_link_text: string | null;
+  contact_url: string | null;
+  contact_phone: string | null;
+  contact_mail: string | null;
+  contact_organisation_name: string | null;
+  socials: Record<string, string> | null;
+  cover_alt: string | null;
+  cover_credit: string | null;
+  programs: { name: string; url: string | null }[] | null;
+  audience: string | null;
+  organizer_group: string | null;
+  universe_tags_raw: string | null;
+  childrens: boolean | null;
+  event_indoor: boolean | null;
+  event_pets_allowed: boolean | null;
+  accessibility: {
+    pmr: boolean | null;
+    blind: boolean | null;
+    deaf: boolean | null;
+    sign_language: boolean | null;
+    mental: boolean | null;
+  } | null;
+  transport: string | null;
+  weight: number | null;
 };
-
 
 export type Reservation = {
   id: string;
@@ -91,9 +121,7 @@ export function dateRangeLabel(
 }
 
 function formatEuro(value: number) {
-  return Number.isInteger(value)
-    ? `${value} €`
-    : `${value.toFixed(2).replace(".", ",")} €`;
+  return Number.isInteger(value) ? `${value} €` : `${value.toFixed(2).replace(".", ",")} €`;
 }
 
 /** Extrait les montants d'un texte de tarif (« De 9 à 21 euros », « Tarif plein : 13 € »). */
@@ -108,9 +136,8 @@ export function parsePriceRange(detail: string | null) {
     if (value > 0) amounts.push(value);
   }
   // « De 0 à 15 euros » : le premier montant peut être omis par le motif ci-dessus.
-  const range = /\bde\s+(\d+(?:[.,]\d{1,2})?)\s+(?:à|a)\s+(\d+(?:[.,]\d{1,2})?)\s*(?:€|euros?\b)/i.exec(
-    text,
-  );
+  const range =
+    /\bde\s+(\d+(?:[.,]\d{1,2})?)\s+(?:à|a)\s+(\d+(?:[.,]\d{1,2})?)\s*(?:€|euros?\b)/i.exec(text);
   if (range) {
     const low = Number((range[1] ?? "").replace(",", "."));
     if (low > 0) amounts.push(low);
@@ -127,10 +154,10 @@ export function priceLabel(
   if (price) return formatEuro(price);
   const range = parsePriceRange(exhibition.price_detail ?? null);
   if (!range) return "Payant";
-  if (range.min !== range.max) return `${formatEuro(range.min).replace(" €", "")}–${formatEuro(range.max)}`;
+  if (range.min !== range.max)
+    return `${formatEuro(range.min).replace(" €", "")}–${formatEuro(range.max)}`;
   return formatEuro(range.min);
 }
-
 
 export function statusLabel(exhibition: Exhibition, day: string) {
   if (exhibition.end_date === day) return "Dernier jour";
