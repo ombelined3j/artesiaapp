@@ -244,21 +244,48 @@ function DiscoverPage() {
         (priceMode === "custom" && (exhibition.is_free || (price > 0 && price <= maxPrice)));
       const matchesDistrict = district === "all" || exhibition.museums?.district === district;
       const matchesVenue = venue === "all" || venueKind(exhibition.museums?.name) === venue;
-      const matchesNocturne = !nocturneOnly || (() => {
-        const from = dateFilter ? (dateFilter.kind === "day" ? dateFilter.value : dateFilter.start) : today;
-        const to = dateFilter ? (dateFilter.kind === "day" ? dateFilter.value : dateFilter.end) : toIso(addDays(new Date(`${today}T12:00:00`), 13));
-        const start = exhibition.start_date > from ? exhibition.start_date : from;
-        const end = exhibition.end_date < to ? exhibition.end_date : to;
-        for (let d = new Date(`${start}T12:00:00`); toIso(d) <= end; d = addDays(d, 1)) {
-          if (nocturneOn(exhibition.museums?.name, toIso(d))) return true;
-        }
-        return false;
-      })();
-      return matchesDay && matchesNocturne && matchesUnivers && matchesPrice && matchesDistrict && matchesVenue;
+      const matchesNocturne =
+        !nocturneOnly ||
+        (() => {
+          const from = dateFilter
+            ? dateFilter.kind === "day"
+              ? dateFilter.value
+              : dateFilter.start
+            : today;
+          const to = dateFilter
+            ? dateFilter.kind === "day"
+              ? dateFilter.value
+              : dateFilter.end
+            : toIso(addDays(new Date(`${today}T12:00:00`), 13));
+          const start = exhibition.start_date > from ? exhibition.start_date : from;
+          const end = exhibition.end_date < to ? exhibition.end_date : to;
+          for (let d = new Date(`${start}T12:00:00`); toIso(d) <= end; d = addDays(d, 1)) {
+            if (nocturneOn(exhibition.museums?.name, toIso(d))) return true;
+          }
+          return false;
+        })();
+      return (
+        matchesDay &&
+        matchesNocturne &&
+        matchesUnivers &&
+        matchesPrice &&
+        matchesDistrict &&
+        matchesVenue
+      );
     });
 
     return [...filtered].sort((a, b) => b.popularity - a.popularity);
-  }, [exhibitions, dateFilter, universes, priceMode, maxPrice, district, venue, today, nocturneOnly]);
+  }, [
+    exhibitions,
+    dateFilter,
+    universes,
+    priceMode,
+    maxPrice,
+    district,
+    venue,
+    today,
+    nocturneOnly,
+  ]);
 
   const { buckets, later } = useMemo(() => bucketByWeek(results, today), [results, today]);
 
@@ -301,10 +328,7 @@ function DiscoverPage() {
     <button
       key={label}
       type="button"
-      className={cn(
-        chip,
-        dateFilter?.kind === "range" && dateFilter.label === label && chipActive,
-      )}
+      className={cn(chip, dateFilter?.kind === "range" && dateFilter.label === label && chipActive)}
       onClick={onClick}
     >
       {label}
@@ -361,6 +385,10 @@ function DiscoverPage() {
               <DrawerTitle>Aller à</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-wrap gap-2 px-4">
+              {rangeChip("Ce week-end", () => jumpToWeekend(0, "Ce week-end"))}
+              {rangeChip("Le week-end prochain", () => jumpToWeekend(1, "Le week-end prochain"))}
+              {rangeChip("Cette semaine", () => jumpToWeek(0, "Cette semaine"))}
+              {rangeChip("Semaine prochaine", () => jumpToWeek(1, "Semaine prochaine"))}
               <button
                 type="button"
                 className={cn(chip, nocturneOnly && chipActive)}
@@ -368,10 +396,6 @@ function DiscoverPage() {
               >
                 Nocturne
               </button>
-              {rangeChip("Ce week-end", () => jumpToWeekend(0, "Ce week-end"))}
-              {rangeChip("Le week-end prochain", () => jumpToWeekend(1, "Le week-end prochain"))}
-              {rangeChip("Cette semaine", () => jumpToWeek(0, "Cette semaine"))}
-              {rangeChip("Semaine prochaine", () => jumpToWeek(1, "Semaine prochaine"))}
               {dateFilter ? (
                 <button
                   type="button"
@@ -516,7 +540,6 @@ function DiscoverPage() {
             </div>
           </DrawerContent>
         </Drawer>
-
 
         <Select value={venue} onValueChange={(v) => setVenue(v as "all" | VenueKind)}>
           <SelectTrigger aria-label="Lieux" className={cn(pill, venue !== "all" && pillActive)}>
