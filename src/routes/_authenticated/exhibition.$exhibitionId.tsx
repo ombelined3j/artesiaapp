@@ -25,6 +25,7 @@ import {
   trackExhibitionView,
 } from "@/lib/artesia";
 import { exhibitionImage } from "@/lib/museum-images";
+import { nocturneLines } from "@/lib/nocturnes";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/exhibition/$exhibitionId")({
@@ -167,10 +168,22 @@ function ExhibitionDetail() {
 
               </div>
 
-              {data.description ? (
+              {data.description || nocturneLines(data.museums?.name).length > 0 ? (
                 <section className="mt-8">
                   <SectionTitle>Description</SectionTitle>
-                  <p className="leading-relaxed whitespace-pre-line">{data.description}</p>
+                  {data.description ? (
+                    <p className="leading-relaxed whitespace-pre-line">{data.description}</p>
+                  ) : null}
+                  {nocturneLines(data.museums?.name).length > 0 ? (
+                    <div className="mt-4 rounded-2xl bg-secondary p-4">
+                      <p className="font-medium">Nocturnes</p>
+                      <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
+                        {nocturneLines(data.museums?.name).map((line) => (
+                          <li key={line}>{line}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
                 </section>
               ) : null}
 
