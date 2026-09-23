@@ -369,7 +369,7 @@ export const syncParisExhibitions = createServerFn({ method: "POST" })
       const chunk = rows.slice(i, i + 50);
       const { error } = await supabaseAdmin
         .from("exhibitions")
-        .upsert(chunk, { onConflict: "source,source_id" });
+        .upsert(chunk as never, { onConflict: "source,source_id" });
       if (error) throw new Error(error.message);
       imported += chunk.length;
     }

@@ -258,6 +258,30 @@ function DiscoverPage() {
     setAgendaOpen(false);
   };
 
+  /** Samedi -> dimanche de la semaine courante (ou suivante), sans remonter avant aujourd'hui. */
+  const jumpToWeekend = (offsetWeeks: number, label: string) => {
+    const monday = addDays(mondayOf(new Date()), offsetWeeks * 7);
+    const saturday = toIso(addDays(monday, 5));
+    const start = saturday < today ? today : saturday;
+    const end = toIso(addDays(monday, 6));
+    setDateFilter({ kind: "range", start, end, label });
+    setAgendaOpen(false);
+  };
+
+  const rangeChip = (label: string, onClick: () => void) => (
+    <button
+      key={label}
+      type="button"
+      className={cn(
+        chip,
+        dateFilter?.kind === "range" && dateFilter.label === label && chipActive,
+      )}
+      onClick={onClick}
+    >
+      {label}
+    </button>
+  );
+
   return (
     <AppShell>
       <header className="mb-4 flex items-center justify-between">
@@ -290,30 +314,10 @@ function DiscoverPage() {
               <DrawerTitle>Aller à</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-wrap gap-2 px-4">
-              <button
-                type="button"
-                className={cn(
-                  chip,
-                  dateFilter?.kind === "range" &&
-                    dateFilter.label === "Cette semaine" &&
-                    chipActive,
-                )}
-                onClick={() => jumpToWeek(0, "Cette semaine")}
-              >
-                Cette semaine
-              </button>
-              <button
-                type="button"
-                className={cn(
-                  chip,
-                  dateFilter?.kind === "range" &&
-                    dateFilter.label === "Semaine prochaine" &&
-                    chipActive,
-                )}
-                onClick={() => jumpToWeek(1, "Semaine prochaine")}
-              >
-                Semaine prochaine
-              </button>
+              {rangeChip("Ce week-end", () => jumpToWeekend(0, "Ce week-end"))}
+              {rangeChip("Le week-end prochain", () => jumpToWeekend(1, "Le week-end prochain"))}
+              {rangeChip("Cette semaine", () => jumpToWeek(0, "Cette semaine"))}
+              {rangeChip("Semaine prochaine", () => jumpToWeek(1, "Semaine prochaine"))}
               {dateFilter ? (
                 <button
                   type="button"
