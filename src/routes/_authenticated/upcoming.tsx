@@ -311,21 +311,6 @@ function DiscoverPage() {
       </header>
 
       <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
-        <Select value={venue} onValueChange={(v) => setVenue(v as "all" | VenueKind)}>
-          <SelectTrigger aria-label="Lieux" className={cn(pill, venue !== "all" && pillActive)}>
-            <Building2 className="h-4 w-4" />
-            <SelectValue placeholder="Lieux">
-              {venue === "all" ? "Lieux" : VENUE_LABELS[venue]}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous les lieux</SelectItem>
-            <SelectItem value="musee">Musée</SelectItem>
-            <SelectItem value="galerie">Galerie</SelectItem>
-            <SelectItem value="atelier">Atelier</SelectItem>
-          </SelectContent>
-        </Select>
-
         <Select value={district} onValueChange={setDistrict}>
           <SelectTrigger
             aria-label="Quartier"
@@ -513,6 +498,21 @@ function DiscoverPage() {
           </DrawerContent>
         </Drawer>
 
+
+        <Select value={venue} onValueChange={(v) => setVenue(v as "all" | VenueKind)}>
+          <SelectTrigger aria-label="Lieux" className={cn(pill, venue !== "all" && pillActive)}>
+            <Building2 className="h-4 w-4" />
+            <SelectValue placeholder="Lieux">
+              {venue === "all" ? "Lieux" : VENUE_LABELS[venue]}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les lieux</SelectItem>
+            <SelectItem value="musee">Musée</SelectItem>
+            <SelectItem value="galerie">Galerie</SelectItem>
+            <SelectItem value="atelier">Atelier</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="mt-7">
