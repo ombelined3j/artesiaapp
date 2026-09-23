@@ -10,6 +10,7 @@ import {
   type Exhibition,
 } from "@/lib/artesia";
 import { exhibitionImage } from "@/lib/museum-images";
+import { nocturneOn } from "@/lib/nocturnes";
 
 type Props = {
   exhibition: Exhibition;
@@ -30,6 +31,7 @@ export function ExhibitionCard({
   const poster = variant === "poster";
   const isFree = Boolean(exhibition.is_free);
   const image = exhibitionImage(exhibition);
+  const nocturne = day ? nocturneOn(exhibition.museums?.name, day) : null;
 
 
   return (
@@ -111,6 +113,11 @@ export function ExhibitionCard({
             {isFree ? (
               <span className="inline-flex h-6 items-center justify-center rounded-full bg-badge-free px-3 text-center text-xs font-semibold leading-none text-badge-foreground">
                 Gratuit
+              </span>
+            ) : null}
+            {nocturne ? (
+              <span className="inline-flex h-6 items-center justify-center rounded-full bg-primary px-3 text-center text-xs font-semibold leading-none text-primary-foreground">
+                Nocturne · {nocturne.time}
               </span>
             ) : null}
             {status ? (
