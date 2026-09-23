@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { nocturneOn } from "@/lib/nocturnes";
 import { cn } from "@/lib/utils";
 import { fetchAllExhibitions, formatDayShort, isoDate, type Exhibition } from "@/lib/artesia";
 
@@ -191,6 +192,7 @@ function DiscoverPage() {
   const [district, setDistrict] = useState("all");
   const [venue, setVenue] = useState<"all" | VenueKind>("all");
   const [dateFilter, setDateFilter] = useState<DateFilter | null>(null);
+  const [nocturneOnly, setNocturneOnly] = useState(false);
   const [universes, setUniverses] = useState<string[]>([]);
   const [priceMode, setPriceMode] = useState<PriceMode>("all");
   const [maxPrice, setMaxPrice] = useState(30);
@@ -242,11 +244,21 @@ function DiscoverPage() {
         (priceMode === "custom" && (exhibition.is_free || (price > 0 && price <= maxPrice)));
       const matchesDistrict = district === "all" || exhibition.museums?.district === district;
       const matchesVenue = venue === "all" || venueKind(exhibition.museums?.name) === venue;
-      return matchesDay && matchesUnivers && matchesPrice && matchesDistrict && matchesVenue;
+      const matchesNocturne = !nocturneOnly || (() => {
+        const from = dateFilter ? (dateFilter.kind === "day" ? dateFilter.value : dateFilter.start) : today;
+        const to = dateFilter ? (dateFilter.kind === "day" ? dateFilter.value : dateFilter.end) : toIso(addDays(new Date(`${today}T12:00:00`), 13));
+        const start = exhibition.start_date > from ? exhibition.start_date : from;
+        const end = exhibition.end_date < to ? exhibition.end_date : to;
+        for (let d = new Date(`${start}T12:00:00`); toIso(d) <= end; d = addDays(d, 1)) {
+          if (nocturneOn(exhibition.museums?.name, toIso(d))) return true;
+        }
+        return false;
+      })();
+      return matchesDay && matchesNocturne && matchesUnivers && matchesPrice && matchesDistrict && matchesVenue;
     });
 
     return [...filtered].sort((a, b) => b.popularity - a.popularity);
-  }, [exhibitions, dateFilter, universes, priceMode, maxPrice, district, venue, today]);
+  }, [exhibitions, dateFilter, universes, priceMode, maxPrice, district, venue, today, nocturneOnly]);
 
   const { buckets, later } = useMemo(() => bucketByWeek(results, today), [results, today]);
 
@@ -334,7 +346,7 @@ function DiscoverPage() {
             <button
               type="button"
               aria-label="Agenda"
-              className={cn(pill, dateFilter && pillActive)}
+              className={cn(pill, (dateFilter || nocturneOnly) && pillActive)}
             >
               <CalendarDays className="h-4 w-4" />
               {!dateFilter
@@ -349,6 +361,13 @@ function DiscoverPage() {
               <DrawerTitle>Aller à</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-wrap gap-2 px-4">
+              <button
+                type="button"
+                className={cn(chip, nocturneOnly && chipActive)}
+                onClick={() => setNocturneOnly((v) => !v)}
+              >
+                Nocturne
+              </button>
               {rangeChip("Ce week-end", () => jumpToWeekend(0, "Ce week-end"))}
               {rangeChip("Le week-end prochain", () => jumpToWeekend(1, "Le week-end prochain"))}
               {rangeChip("Cette semaine", () => jumpToWeek(0, "Cette semaine"))}
