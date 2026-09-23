@@ -237,9 +237,9 @@ function DiscoverPage() {
       const price = Number(exhibition.price);
       const matchesPrice =
         priceMode === "all" ||
-        (priceMode === "free" && (exhibition.is_free || price === 0)) ||
-        (priceMode === "max15" && price <= 15) ||
-        (priceMode === "custom" && price <= maxPrice);
+        (priceMode === "free" && exhibition.is_free) ||
+        (priceMode === "max15" && (exhibition.is_free || (price > 0 && price <= 15))) ||
+        (priceMode === "custom" && (exhibition.is_free || (price > 0 && price <= maxPrice)));
       const matchesDistrict = district === "all" || exhibition.museums?.district === district;
       const matchesVenue = venue === "all" || venueKind(exhibition.museums?.name) === venue;
       return matchesDay && matchesUnivers && matchesPrice && matchesDistrict && matchesVenue;
