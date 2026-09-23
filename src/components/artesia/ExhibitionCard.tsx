@@ -117,7 +117,7 @@ export function ExhibitionCard({
             ) : null}
             {nocturne ? (
               <span className="inline-flex h-6 items-center justify-center rounded-full bg-primary px-3 text-center text-xs font-semibold leading-none text-primary-foreground">
-                Nocturne · {nocturne.time}
+                Nocturne
               </span>
             ) : null}
             {status ? (
