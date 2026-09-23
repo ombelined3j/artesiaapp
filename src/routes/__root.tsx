@@ -115,11 +115,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    // Browser extensions (Grammarly, password managers, …) inject attributes into
+    // <html>/<body> before React hydrates; suppress the resulting false-positive
+    // attribute-mismatch warning on just these two nodes (React's documented fix).
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Scripts />
       </body>

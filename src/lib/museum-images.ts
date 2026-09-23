@@ -33,14 +33,18 @@ const MUSEUM_IMAGES: Record<string, string> = {
 function isUsable(url: string | null | undefined): boolean {
   if (!url) return false;
   // Les anciennes URLs de démonstration ne renvoient plus d'image.
-  return !url.includes("res.cloudinary.com/ncu7idmv");
+  if (url.includes("res.cloudinary.com/ncu7idmv")) return false;
+  // Pointeur d'asset Lovable Cloud (/__l5e/assets-v1/...) : ne se résout que via le
+  // proxy de prévisualisation de Lovable (LOVABLE_PREVIEW_HOST), absent en local.
+  if (url.startsWith("/__l5e/")) return false;
+  return true;
 }
 
 /** Photo associée au musée, ou null si aucune photo n'est disponible. */
 export function museumImage(museum: Pick<Museum, "name" | "image_url"> | null | undefined) {
   if (!museum) return null;
   const mapped = MUSEUM_IMAGES[slug(museum.name ?? "")];
-  if (mapped) return mapped;
+  if (isUsable(mapped)) return mapped;
   return isUsable(museum.image_url) ? museum.image_url : null;
 }
 
