@@ -74,7 +74,7 @@ function Landing() {
             {
               icon: CalendarDays,
               title: "Les évènements artistiques du moment à ne pas rater",
-              text: "Découvrez les meilleurs rendez-vous artistiques.\n\n",
+              text: "Découvrez les meilleurs expos des musées et galeries",
             },
             {
               icon: Ticket,
