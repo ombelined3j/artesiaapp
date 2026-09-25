@@ -80,7 +80,7 @@ function Landing() {
           </div>
         </section>
 
-        <section className="grid gap-4 pb-16 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid gap-4 pb-16 sm:grid-cols-2">
           {[
             {
               icon: CalendarDays,
@@ -91,11 +91,6 @@ function Landing() {
               icon: Ticket,
               title: "Réservation simplfiée",
               text: "Réservez votre billet en quelques secondes et planifiez vos sorties sans faire la queue. ",
-            },
-            {
-              icon: Sparkles,
-              title: "Vous êtes artiste ? Trouvez votre public et vos clients. ",
-              text: "Développez votre communauté et trouvez vos prochains clients. ",
             },
           ].map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-card p-5">
@@ -176,6 +171,21 @@ function Landing() {
             </div>
           </section>
         ) : null}
+
+        <section className="pb-16">
+          <div className="mx-auto max-w-xl rounded-2xl bg-card p-6 text-center">
+            <Sparkles className="mx-auto h-5 w-5 text-primary" />
+            <h3 className="mt-3 text-lg">
+              Vous êtes artiste ? Trouvez votre public et vos clients.
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Développez votre communauté et trouvez vos prochains clients.
+            </p>
+            <Button asChild size="lg" className="mt-5">
+              <a href="/publier-evenement">Publier mon évènement</a>
+            </Button>
+          </div>
+        </section>
       </main>
 
       <footer className="border-t px-5 py-6 text-center text-sm text-muted-foreground">
