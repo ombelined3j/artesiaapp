@@ -49,7 +49,8 @@ function Landing() {
               Découvrez et réservez les meilleurs expos.&nbsp;
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
-              Téléchargez Artesia et trouvez toutes les expos, vernissages et galeries autour de vous.&nbsp;
+              Téléchargez Artesia et trouvez les meilleurs expos, vernissages et galeries autour de
+              vous.&nbsp;
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -74,7 +75,7 @@ function Landing() {
             {
               icon: CalendarDays,
               title: "Les évènements artistiques du moment à ne pas rater",
-              text: "Découvrez les meilleurs expos des musées et galeries",
+              text: "Découvrez les meilleurs expos des musées et galeries autour de vous.",
             },
             {
               icon: Ticket,
