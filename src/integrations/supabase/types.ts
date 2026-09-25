@@ -341,7 +341,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      most_viewed_exhibitions: {
+        Args: { result_limit?: number };
+        Returns: { exhibition_id: string; view_count: number }[];
+      };
     };
     Enums: {
       [_ in never]: never;

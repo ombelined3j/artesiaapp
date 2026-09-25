@@ -1,11 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { User } from "lucide-react";
+import { Eye, User } from "lucide-react";
+import { useMemo } from "react";
 
 import { AppShell, ErrorState, LoadingList, SectionTitle } from "@/components/artesia/AppShell";
 import { ExhibitionCard } from "@/components/artesia/ExhibitionCard";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchAllExhibitions, fetchSignals, isoDate, recommend } from "@/lib/artesia";
+import {
+  fetchAllExhibitions,
+  fetchMostViewedExhibition,
+  fetchSignals,
+  isoDate,
+  recommend,
+} from "@/lib/artesia";
+import { isExhibitionFreeThisMonth, nextMonthReference } from "@/lib/free-museums";
 
 export const Route = createFileRoute("/_authenticated/for-you")({
   head: () => ({
@@ -29,6 +37,11 @@ export const Route = createFileRoute("/_authenticated/for-you")({
 
 function ForYouPage() {
   const today = isoDate(0);
+  const referenceMonth = useMemo(() => nextMonthReference(), []);
+  const referenceMonthLabel = useMemo(() => {
+    const label = referenceMonth.toLocaleDateString("fr-FR", { month: "long" });
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  }, [referenceMonth]);
 
   const userQuery = useQuery({
     queryKey: ["auth", "user"],
@@ -39,17 +52,34 @@ function ForYouPage() {
     queryFn: fetchAllExhibitions,
   });
   const signalsQuery = useQuery({ queryKey: ["signals"], queryFn: fetchSignals });
+  const mostViewedQuery = useQuery({
+    queryKey: ["exhibitions", "most-viewed"],
+    queryFn: fetchMostViewedExhibition,
+  });
 
   const isLoading = exhibitionsQuery.isLoading || signalsQuery.isLoading;
   const signals = signalsQuery.data;
+  const exhibitions = exhibitionsQuery.data;
   const recommendations =
-    exhibitionsQuery.data && signals
-      ? recommend(exhibitionsQuery.data, signals, today).slice(0, 10)
-      : [];
-  const hasHistory =
-    (signals?.viewedIds.length ?? 0) +
-      (signals?.reservedIds.length ?? 0) >
-    0;
+    exhibitions && signals ? recommend(exhibitions, signals, today).slice(0, 10) : [];
+  const hasHistory = (signals?.viewedIds.length ?? 0) + (signals?.reservedIds.length ?? 0) > 0;
+
+  const freeThisMonth = useMemo(() => {
+    if (!exhibitions) return [];
+    return exhibitions
+      .map((exhibition) => ({
+        exhibition,
+        info: isExhibitionFreeThisMonth(exhibition, referenceMonth),
+      }))
+      .filter(
+        (
+          row,
+        ): row is {
+          exhibition: (typeof exhibitions)[number];
+          info: NonNullable<typeof row.info>;
+        } => Boolean(row.info),
+      );
+  }, [exhibitions, referenceMonth]);
 
   const firstName = userQuery.data?.email?.split("@")[0];
 
@@ -69,6 +99,33 @@ function ForYouPage() {
         </p>
       </header>
 
+      {mostViewedQuery.data ? (
+        <section className="mb-8">
+          <SectionTitle>
+            <span className="inline-flex items-center gap-1.5">
+              <Eye className="h-4 w-4" /> L'exposition la plus vue
+            </span>
+          </SectionTitle>
+          <ExhibitionCard exhibition={mostViewedQuery.data} day={today} />
+        </section>
+      ) : null}
+
+      {freeThisMonth.length > 0 ? (
+        <section className="mb-8">
+          <SectionTitle>Musées gratuits en {referenceMonthLabel}</SectionTitle>
+          <div className="space-y-3">
+            {freeThisMonth.map(({ exhibition, info }) => (
+              <ExhibitionCard
+                key={exhibition.id}
+                exhibition={exhibition}
+                day={today}
+                note={info.reason}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <SectionTitle>{hasHistory ? "Recommandé pour vous" : "Populaire à Paris"}</SectionTitle>
       {exhibitionsQuery.isError || signalsQuery.isError ? (
         <ErrorState />
@@ -77,11 +134,7 @@ function ForYouPage() {
       ) : (
         <div className="space-y-3">
           {recommendations.map((exhibition) => (
-            <ExhibitionCard
-              key={exhibition.id}
-              exhibition={exhibition}
-              day={today}
-            />
+            <ExhibitionCard key={exhibition.id} exhibition={exhibition} day={today} />
           ))}
         </div>
       )}

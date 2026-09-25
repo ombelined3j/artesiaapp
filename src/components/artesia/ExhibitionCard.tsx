@@ -17,13 +17,11 @@ type Props = {
   day?: string;
   /** "poster" affiche une grande affiche verticale, sans fond de carte. */
   variant?: "default" | "poster";
+  /** Mention contextuelle affichée sous la carte (ex. raison de gratuité du mois). */
+  note?: string;
 };
 
-export function ExhibitionCard({
-  exhibition,
-  day,
-  variant = "default",
-}: Props) {
+export function ExhibitionCard({ exhibition, day, variant = "default", note }: Props) {
   const status = day ? statusLabel(exhibition, day) : null;
   const hours = formatTime(exhibition.opening_time);
   const closing = formatTime(exhibition.closing_time);
@@ -32,7 +30,6 @@ export function ExhibitionCard({
   const isFree = Boolean(exhibition.is_free);
   const image = exhibitionImage(exhibition);
   const nocturne = day ? nocturneOn(exhibition.museums?.name, day) : null;
-
 
   return (
     <div
@@ -66,14 +63,10 @@ export function ExhibitionCard({
               {exhibition.museums?.name ?? exhibition.title}
             </div>
           )}
-
         </div>
         <div className={cn("min-w-0 flex-1", poster && "pt-1")}>
           <h3
-            className={cn(
-              "truncate",
-              poster ? "text-lg font-semibold" : "text-base font-medium",
-            )}
+            className={cn("truncate", poster ? "text-lg font-semibold" : "text-base font-medium")}
           >
             {exhibition.title}
           </h3>
@@ -151,6 +144,7 @@ export function ExhibitionCard({
               </span>
             ) : null}
           </div>
+          {note ? <p className="mt-2 text-xs font-medium text-primary">{note}</p> : null}
         </div>
       </Link>
     </div>

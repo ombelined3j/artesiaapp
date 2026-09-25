@@ -235,6 +235,15 @@ export async function fetchExhibition(id: string) {
   return (data ?? null) as unknown as Exhibition | null;
 }
 
+/** Exposition la plus consultée par l'ensemble des utilisateurs (agrégat via RPC, RLS-safe). */
+export async function fetchMostViewedExhibition() {
+  const { data, error } = await supabase.rpc("most_viewed_exhibitions", { result_limit: 1 });
+  if (error) throw error;
+  const topId = data?.[0]?.exhibition_id;
+  if (!topId) return null;
+  return fetchExhibition(topId);
+}
+
 export async function fetchMuseums() {
   const { data, error } = await supabase.from("museums").select("*").order("name");
   if (error) throw error;
