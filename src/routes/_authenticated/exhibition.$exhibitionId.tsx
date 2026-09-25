@@ -159,8 +159,24 @@ function ExhibitionDetail() {
                   <span className="text-muted-foreground">au</span> {formatDateFr(data.end_date)}
                 </InfoRow>
                 <InfoRow icon={<Clock className="h-5 w-5" />}>
-                  {formatTime(data.opening_time) ?? "Horaires à confirmer"}
-                  {data.closing_time ? ` – ${formatTime(data.closing_time)}` : ""}
+                  {data.opening_time ? (
+                    <>
+                      {formatTime(data.opening_time)}
+                      {data.closing_time ? ` – ${formatTime(data.closing_time)}` : ""}
+                    </>
+                  ) : data.museums?.opening_hours?.weekdayDescriptions?.length ? (
+                    data.museums.opening_hours.weekdayDescriptions.map((line) => {
+                      const [day, ...rest] = line.split(/\s*:\s*/);
+                      return (
+                        <span key={line} className="flex justify-between gap-4 text-sm">
+                          <span className="text-muted-foreground">{day}</span>
+                          <span>{rest.join(" : ") || line}</span>
+                        </span>
+                      );
+                    })
+                  ) : (
+                    "Horaires à confirmer"
+                  )}
                 </InfoRow>
                 {nocturneLines(data.museums?.name).length > 0 ? (
                   <InfoRow icon={<Moon className="h-5 w-5" />}>
@@ -214,19 +230,6 @@ function ExhibitionDetail() {
               {data.museums ? (
                 <section className="mt-8">
                   <SectionTitle>Lieu</SectionTitle>
-                  {data.museums.opening_hours?.weekdayDescriptions?.length ? (
-                    <dl className="mb-4 space-y-1 text-sm">
-                      {data.museums.opening_hours.weekdayDescriptions.map((line) => {
-                        const [day, ...rest] = line.split(/\s*:\s*/);
-                        return (
-                          <div key={line} className="flex justify-between gap-4">
-                            <dt className="text-muted-foreground">{day}</dt>
-                            <dd className="text-right">{rest.join(" : ") || line}</dd>
-                          </div>
-                        );
-                      })}
-                    </dl>
-                  ) : null}
                   <MuseumMap museum={data.museums} />
                 </section>
               ) : null}
