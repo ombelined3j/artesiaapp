@@ -79,13 +79,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Artesia — Les expositions de Paris" },
+      { title: "Artesy — Les expositions de Paris" },
       {
         name: "description",
         content:
           "Découvrez les expositions parisiennes d'aujourd'hui et de demain, et réservez votre visite.",
       },
-      { property: "og:title", content: "Artesia — Les expositions de Paris" },
+      { property: "og:title", content: "Artesy — Les expositions de Paris" },
       {
         property: "og:description",
         content: "Le fil des expositions parisiennes, aujourd'hui et demain.",

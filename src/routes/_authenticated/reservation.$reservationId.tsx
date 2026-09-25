@@ -9,9 +9,9 @@ import { fetchReservation, formatDateFr } from "@/lib/artesia";
 export const Route = createFileRoute("/_authenticated/reservation/$reservationId")({
   head: () => ({
     meta: [
-      { title: "Réservation confirmée — Artesia" },
+      { title: "Réservation confirmée — Artesy" },
       { name: "description", content: "Le récapitulatif de votre réservation d'exposition." },
-      { property: "og:title", content: "Réservation confirmée — Artesia" },
+      { property: "og:title", content: "Réservation confirmée — Artesy" },
       { property: "og:description", content: "Votre billet d'exposition est enregistré." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

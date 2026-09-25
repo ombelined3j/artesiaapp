@@ -34,12 +34,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/exhibition/$exhibitionId")({
   head: () => ({
     meta: [
-      { title: "Exposition — Artesia" },
+      { title: "Exposition — Artesy" },
       {
         name: "description",
         content: "Détail d'une exposition parisienne : dates, prix, informations pratiques.",
       },
-      { property: "og:title", content: "Exposition — Artesia" },
+      { property: "og:title", content: "Exposition — Artesy" },
       {
         property: "og:description",
         content: "Toutes les informations pratiques avant de réserver votre visite.",
@@ -76,7 +76,7 @@ function ExhibitionDetail() {
     const url = window.location.href;
     try {
       if (navigator.share) {
-        await navigator.share({ title: data?.title ?? "Artesia", url });
+        await navigator.share({ title: data?.title ?? "Artesy", url });
         return;
       }
       await navigator.clipboard.writeText(url);

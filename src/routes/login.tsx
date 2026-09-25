@@ -10,13 +10,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Se connecter — Artesia" },
+      { title: "Se connecter — Artesy" },
       {
         name: "description",
-        content: "Connectez-vous à Artesia pour retrouver les expositions parisiennes du jour.",
+        content: "Connectez-vous à Artesy pour retrouver les expositions parisiennes du jour.",
       },
-      { property: "og:title", content: "Se connecter — Artesia" },
-      { property: "og:description", content: "Accédez à vos tickets Artesia." },
+      { property: "og:title", content: "Se connecter — Artesy" },
+      { property: "og:description", content: "Accédez à vos tickets Artesy." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

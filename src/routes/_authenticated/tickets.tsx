@@ -14,12 +14,12 @@ import { fetchReservations, formatDateFr, isoDate, type Reservation } from "@/li
 export const Route = createFileRoute("/_authenticated/tickets")({
   head: () => ({
     meta: [
-      { title: "Mes tickets — Artesia" },
+      { title: "Mes tickets — Artesy" },
       {
         name: "description",
-        content: "Retrouvez vos réservations d'expositions à venir et passées sur Artesia.",
+        content: "Retrouvez vos réservations d'expositions à venir et passées sur Artesy.",
       },
-      { property: "og:title", content: "Mes tickets — Artesia" },
+      { property: "og:title", content: "Mes tickets — Artesy" },
       { property: "og:description", content: "Vos billets d'exposition, à venir et passés." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -40,9 +40,7 @@ function TicketCard({ reservation }: { reservation: Reservation }) {
           <h3 className="truncate text-base font-medium">
             {reservation.exhibitions?.title ?? "Exposition"}
           </h3>
-          <p className="text-sm text-muted-foreground">
-            {reservation.exhibitions?.museums?.name}
-          </p>
+          <p className="text-sm text-muted-foreground">{reservation.exhibitions?.museums?.name}</p>
         </div>
         <span className="shrink-0 rounded-full bg-petrol px-2.5 py-1 text-xs font-medium text-petrol-foreground">
           {reservation.status === "confirmed" ? "Confirmé" : reservation.status}

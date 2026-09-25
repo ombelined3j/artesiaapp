@@ -18,12 +18,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/exhibition/$exhibitionId/book")({
   head: () => ({
     meta: [
-      { title: "Réserver — Artesia" },
+      { title: "Réserver — Artesy" },
       {
         name: "description",
         content: "Choisissez votre date, votre créneau et votre billet pour visiter l'exposition.",
       },
-      { property: "og:title", content: "Réserver — Artesia" },
+      { property: "og:title", content: "Réserver — Artesy" },
       { property: "og:description", content: "Réservez votre visite en quelques taps." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -154,7 +154,9 @@ function BookPage() {
                   onClick={() => setSlot(value)}
                   className={cn(
                     "rounded-full border px-4 py-2 text-sm",
-                    slot === value ? "border-primary bg-primary text-primary-foreground" : "bg-card",
+                    slot === value
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "bg-card",
                   )}
                 >
                   {value}
@@ -217,9 +219,7 @@ function BookPage() {
               </div>
               <div className="flex justify-between border-t pt-2 text-base font-medium">
                 <dt>Total</dt>
-                <dd>
-                  {total === 0 ? "Gratuit" : `${total.toFixed(2).replace(".", ",")} €`}
-                </dd>
+                <dd>{total === 0 ? "Gratuit" : `${total.toFixed(2).replace(".", ",")} €`}</dd>
               </div>
             </dl>
           </section>

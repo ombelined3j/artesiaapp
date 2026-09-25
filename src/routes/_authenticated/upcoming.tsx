@@ -36,13 +36,13 @@ import { fetchAllExhibitions, formatDayShort, isoDate, type Exhibition } from "@
 export const Route = createFileRoute("/_authenticated/upcoming")({
   head: () => ({
     meta: [
-      { title: "Explorer — Artesia" },
+      { title: "Explorer — Artesy" },
       {
         name: "description",
         content:
           "Toutes les expositions parisiennes du jour, de demain et à venir, filtrées par univers, date et prix.",
       },
-      { property: "og:title", content: "Explorer — Artesia" },
+      { property: "og:title", content: "Explorer — Artesy" },
       {
         property: "og:description",
         content: "Aujourd'hui, demain et à venir : trouvez et réservez vos expositions à Paris.",

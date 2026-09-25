@@ -14,10 +14,10 @@ import { syncParisMuseesArtworks } from "@/lib/parismusees.functions";
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     meta: [
-      { title: "Mon profil — Artesia" },
-      { name: "description", content: "Votre compte Artesia et vos préférences." },
-      { property: "og:title", content: "Mon profil — Artesia" },
-      { property: "og:description", content: "Gérez votre compte Artesia." },
+      { title: "Mon profil — Artesy" },
+      { name: "description", content: "Votre compte Artesy et vos préférences." },
+      { property: "og:title", content: "Mon profil — Artesy" },
+      { property: "og:description", content: "Gérez votre compte Artesy." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

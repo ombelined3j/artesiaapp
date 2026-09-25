@@ -18,12 +18,12 @@ import { isExhibitionFreeThisMonth, nextMonthReference } from "@/lib/free-museum
 export const Route = createFileRoute("/_authenticated/for-you")({
   head: () => ({
     meta: [
-      { title: "Pour vous — Artesia" },
+      { title: "Pour vous — Artesy" },
       {
         name: "description",
         content: "Des expositions parisiennes recommandées selon vos visites.",
       },
-      { property: "og:title", content: "Pour vous — Artesia" },
+      { property: "og:title", content: "Pour vous — Artesy" },
       {
         property: "og:description",
         content: "Vos recommandations d'expositions à Paris, affinées au fil de vos visites.",

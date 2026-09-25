@@ -11,13 +11,13 @@ import { exhibitionImage } from "@/lib/museum-images";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Artesia — Les expositions de Paris, aujourd'hui et demain" },
+      { title: "Artesy — Les expositions de Paris, aujourd'hui et demain" },
       {
         name: "description",
         content:
           "Découvrez en un coup d'œil les expositions parisiennes du jour et du lendemain, recevez des recommandations et réservez votre visite.",
       },
-      { property: "og:title", content: "Artesia — Les expositions de Paris" },
+      { property: "og:title", content: "Artesy — Les expositions de Paris" },
       {
         property: "og:description",
         content:
@@ -59,7 +59,7 @@ function Landing() {
               Découvrez et réservez les meilleurs expos.&nbsp;
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
-              Téléchargez Artesia et trouvez les meilleurs expos, vernissages et galeries autour de
+              Téléchargez Artesy et trouvez les meilleurs expos, vernissages et galeries autour de
               vous.&nbsp;
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -189,7 +189,7 @@ function Landing() {
       </main>
 
       <footer className="border-t px-5 py-6 text-center text-sm text-muted-foreground">
-        Artesia · Les meilleurs rendez-vous artistiques
+        Artesy · Les meilleurs rendez-vous artistiques
       </footer>
     </div>
   );
