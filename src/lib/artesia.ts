@@ -114,6 +114,40 @@ export function formatDayShort(value: string) {
     .replace(".", "");
 }
 
+function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+/**
+ * Condense les 7 lignes « jour : horaire » de Google Places en groupes de
+ * jours consécutifs partageant les mêmes horaires, ex. « Lundi au vendredi »
+ * + « Samedi » + « Dimanche » plutôt qu'une ligne par jour.
+ */
+export function groupWeekdayHours(weekdayDescriptions: string[]) {
+  const days = weekdayDescriptions.map((line) => {
+    const [day, ...rest] = line.split(/\s*:\s*/);
+    return { day: day ?? line, hours: rest.join(" : ") || line };
+  });
+
+  const groups: { start: string; end: string; hours: string }[] = [];
+  for (const { day, hours } of days) {
+    const last = groups[groups.length - 1];
+    if (last && last.hours === hours) {
+      last.end = day;
+    } else {
+      groups.push({ start: day, end: day, hours });
+    }
+  }
+
+  return groups.map((group) => ({
+    label:
+      group.start === group.end
+        ? capitalize(group.start)
+        : `${capitalize(group.start)} au ${group.end}`,
+    hours: group.hours,
+  }));
+}
+
 /** Période d'affichage d'une exposition, relative au jour donné. */
 export function dateRangeLabel(
   exhibition: Pick<Exhibition, "start_date" | "end_date">,

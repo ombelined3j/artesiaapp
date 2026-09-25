@@ -23,6 +23,7 @@ import {
   fetchMuseumArtwork,
   formatDateFr,
   formatTime,
+  groupWeekdayHours,
   priceLabel,
   trackExhibitionView,
 } from "@/lib/artesia";
@@ -165,15 +166,14 @@ function ExhibitionDetail() {
                       {data.closing_time ? ` – ${formatTime(data.closing_time)}` : ""}
                     </>
                   ) : data.museums?.opening_hours?.weekdayDescriptions?.length ? (
-                    data.museums.opening_hours.weekdayDescriptions.map((line) => {
-                      const [day, ...rest] = line.split(/\s*:\s*/);
-                      return (
-                        <span key={line} className="flex justify-between gap-4 text-sm">
-                          <span className="text-muted-foreground">{day}</span>
-                          <span>{rest.join(" : ") || line}</span>
+                    groupWeekdayHours(data.museums.opening_hours.weekdayDescriptions).map(
+                      (group) => (
+                        <span key={group.label} className="flex justify-between gap-4 text-sm">
+                          <span className="text-muted-foreground">{group.label}</span>
+                          <span>{group.hours}</span>
                         </span>
-                      );
-                    })
+                      ),
+                    )
                   ) : (
                     "Horaires à confirmer"
                   )}
