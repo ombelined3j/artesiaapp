@@ -214,6 +214,19 @@ function ExhibitionDetail() {
               {data.museums ? (
                 <section className="mt-8">
                   <SectionTitle>Lieu</SectionTitle>
+                  {data.museums.opening_hours?.weekdayDescriptions?.length ? (
+                    <dl className="mb-4 space-y-1 text-sm">
+                      {data.museums.opening_hours.weekdayDescriptions.map((line) => {
+                        const [day, ...rest] = line.split(/\s*:\s*/);
+                        return (
+                          <div key={line} className="flex justify-between gap-4">
+                            <dt className="text-muted-foreground">{day}</dt>
+                            <dd className="text-right">{rest.join(" : ") || line}</dd>
+                          </div>
+                        );
+                      })}
+                    </dl>
+                  ) : null}
                   <MuseumMap museum={data.museums} />
                 </section>
               ) : null}

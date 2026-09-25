@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Palette, RefreshCw, Search } from "lucide-react";
+import { Clock, Loader2, Palette, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/artesia/AppShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { syncMuseumOpeningHours } from "@/lib/google-places.functions";
 import { syncParisExhibitions } from "@/lib/paris-sync.functions";
 import { syncParisMuseesArtworks } from "@/lib/parismusees.functions";
 
@@ -61,6 +62,23 @@ function ProfilePage() {
       ),
   });
 
+  const runHoursSync = useServerFn(syncMuseumOpeningHours);
+  const hoursSync = useMutation({
+    mutationFn: () => runHoursSync(),
+    onSuccess: (result) => {
+      void queryClient.invalidateQueries({ queryKey: ["exhibitions"] });
+      void queryClient.invalidateQueries({ queryKey: ["museums"] });
+      const detail = result.failures.length > 0 ? ` (${result.failures.length} en échec)` : "";
+      toast.success(
+        `${result.updated}/${result.total} lieux à jour${detail}, ${result.notFound} introuvables.`,
+      );
+    },
+    onError: (error) =>
+      toast.error(
+        error instanceof Error ? error.message : "La synchronisation Google Places a échoué.",
+      ),
+  });
+
   async function handleSignOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
@@ -105,6 +123,21 @@ function ProfilePage() {
             <Palette className="h-5 w-5 text-primary" />
           )}
           {artworksSync.isPending ? "Mise à jour en cours…" : "Actualiser les œuvres Paris Musées"}
+        </button>
+        <button
+          type="button"
+          onClick={() => hoursSync.mutate()}
+          disabled={hoursSync.isPending}
+          className="flex w-full items-center gap-3 rounded-2xl bg-card p-4 text-left font-medium disabled:opacity-70"
+        >
+          {hoursSync.isPending ? (
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          ) : (
+            <Clock className="h-5 w-5 text-primary" />
+          )}
+          {hoursSync.isPending
+            ? "Mise à jour en cours…"
+            : "Actualiser les horaires (Google Places)"}
         </button>
       </div>
 

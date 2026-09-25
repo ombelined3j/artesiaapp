@@ -1,5 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 
+export type OpeningHours = {
+  periods?: unknown;
+  weekdayDescriptions: string[];
+};
+
 export type Museum = {
   id: string;
   name: string;
@@ -9,6 +14,7 @@ export type Museum = {
   longitude: number | null;
   website_url: string | null;
   image_url: string | null;
+  opening_hours: OpeningHours | null;
 };
 
 export type Exhibition = {
