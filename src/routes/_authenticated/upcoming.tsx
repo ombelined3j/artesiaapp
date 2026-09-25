@@ -226,7 +226,10 @@ function DiscoverPage() {
     [exhibitions],
   );
 
-  const results = useMemo(() => {
+  // Sans le filtre Nocturne : celui-ci dépend du jour exact d'affichage de
+  // chaque carte (bucket, jour choisi...), appliqué juste après le regroupement
+  // pour rester cohérent avec le badge "Nocturne" réellement affiché.
+  const baseResults = useMemo(() => {
     const filtered = exhibitions.filter((exhibition) => {
       const matchesDay = !dateFilter
         ? exhibition.end_date >= today
@@ -244,50 +247,37 @@ function DiscoverPage() {
         (priceMode === "custom" && (exhibition.is_free || (price > 0 && price <= maxPrice)));
       const matchesDistrict = district === "all" || exhibition.museums?.district === district;
       const matchesVenue = venue === "all" || venueKind(exhibition.museums?.name) === venue;
-      const matchesNocturne =
-        !nocturneOnly ||
-        (() => {
-          const from = dateFilter
-            ? dateFilter.kind === "day"
-              ? dateFilter.value
-              : dateFilter.start
-            : today;
-          const to = dateFilter
-            ? dateFilter.kind === "day"
-              ? dateFilter.value
-              : dateFilter.end
-            : toIso(addDays(new Date(`${today}T12:00:00`), 13));
-          const start = exhibition.start_date > from ? exhibition.start_date : from;
-          const end = exhibition.end_date < to ? exhibition.end_date : to;
-          for (let d = new Date(`${start}T12:00:00`); toIso(d) <= end; d = addDays(d, 1)) {
-            if (nocturneOn(exhibition.museums?.name, toIso(d))) return true;
-          }
-          return false;
-        })();
-      return (
-        matchesDay &&
-        matchesNocturne &&
-        matchesUnivers &&
-        matchesPrice &&
-        matchesDistrict &&
-        matchesVenue
-      );
+      return matchesDay && matchesUnivers && matchesPrice && matchesDistrict && matchesVenue;
     });
 
     return [...filtered].sort((a, b) => b.popularity - a.popularity);
-  }, [
-    exhibitions,
-    dateFilter,
-    universes,
-    priceMode,
-    maxPrice,
-    district,
-    venue,
-    today,
-    nocturneOnly,
-  ]);
+  }, [exhibitions, dateFilter, universes, priceMode, maxPrice, district, venue, today]);
 
-  const { buckets, later } = useMemo(() => bucketByWeek(results, today), [results, today]);
+  const { buckets, later } = useMemo(() => {
+    const grouped = bucketByWeek(baseResults, today);
+    if (!nocturneOnly) return grouped;
+    return {
+      buckets: grouped.buckets.map((bucket) => ({
+        ...bucket,
+        exhibitions: bucket.exhibitions.filter((e) => nocturneOn(e.museums?.name, bucket.day)),
+      })),
+      later: grouped.later.filter((e) => nocturneOn(e.museums?.name, e.start_date)),
+    };
+  }, [baseResults, today, nocturneOnly]);
+
+  const flatDay = dateFilter
+    ? dateFilter.kind === "day"
+      ? dateFilter.value
+      : dateFilter.start
+    : null;
+  const flatResults = useMemo(() => {
+    if (!nocturneOnly || !flatDay) return baseResults;
+    return baseResults.filter((e) => nocturneOn(e.museums?.name, flatDay));
+  }, [baseResults, nocturneOnly, flatDay]);
+
+  const visibleCount = dateFilter
+    ? flatResults.length
+    : buckets.reduce((sum, bucket) => sum + bucket.exhibitions.length, 0) + later.length;
 
   const pill =
     "inline-flex h-10 w-auto shrink-0 items-center gap-1.5 rounded-full border bg-transparent px-4 text-sm whitespace-nowrap";
@@ -470,7 +460,7 @@ function DiscoverPage() {
             </div>
             <div className="p-4 pb-8">
               <Button className="w-full" onClick={() => setUniversOpen(false)}>
-                Voir {results.length} exposition{results.length > 1 ? "s" : ""}
+                Voir {visibleCount} exposition{visibleCount > 1 ? "s" : ""}
               </Button>
             </div>
           </DrawerContent>
@@ -535,7 +525,7 @@ function DiscoverPage() {
             ) : null}
             <div className="p-4 pb-8">
               <Button className="w-full" onClick={() => setPriceOpen(false)}>
-                Voir {results.length} exposition{results.length > 1 ? "s" : ""}
+                Voir {visibleCount} exposition{visibleCount > 1 ? "s" : ""}
               </Button>
             </div>
           </DrawerContent>
@@ -562,7 +552,7 @@ function DiscoverPage() {
           <ErrorState />
         ) : isLoading ? (
           <LoadingList count={4} />
-        ) : results.length === 0 ? (
+        ) : visibleCount === 0 ? (
           <EmptyState
             title="Aucun résultat"
             description="Essayez une autre date ou élargissez vos filtres."
@@ -570,16 +560,12 @@ function DiscoverPage() {
         ) : dateFilter ? (
           <>
             <SectionTitle>
-              {results.length} exposition{results.length > 1 ? "s" : ""}
+              {flatResults.length} exposition{flatResults.length > 1 ? "s" : ""}
             </SectionTitle>
             <div className="divide-y">
-              {results.map((exhibition) => (
+              {flatResults.map((exhibition) => (
                 <div key={exhibition.id} className="py-4 first:pt-0">
-                  <ExhibitionCard
-                    exhibition={exhibition}
-                    day={dateFilter.kind === "day" ? dateFilter.value : dateFilter.start}
-                    variant="poster"
-                  />
+                  <ExhibitionCard exhibition={exhibition} day={flatDay ?? today} variant="poster" />
                 </div>
               ))}
             </div>
