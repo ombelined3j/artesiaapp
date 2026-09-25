@@ -110,6 +110,21 @@ function ForYouPage() {
         </section>
       ) : null}
 
+      <section className="mb-8">
+        <SectionTitle>{hasHistory ? "Recommandé pour vous" : "Populaire à Paris"}</SectionTitle>
+        {exhibitionsQuery.isError || signalsQuery.isError ? (
+          <ErrorState />
+        ) : isLoading ? (
+          <LoadingList count={4} />
+        ) : (
+          <div className="space-y-3">
+            {recommendations.map((exhibition) => (
+              <ExhibitionCard key={exhibition.id} exhibition={exhibition} day={today} />
+            ))}
+          </div>
+        )}
+      </section>
+
       {freeThisMonth.length > 0 ? (
         <section className="mb-8">
           <SectionTitle>Musées gratuits en {referenceMonthLabel}</SectionTitle>
@@ -125,19 +140,6 @@ function ForYouPage() {
           </div>
         </section>
       ) : null}
-
-      <SectionTitle>{hasHistory ? "Recommandé pour vous" : "Populaire à Paris"}</SectionTitle>
-      {exhibitionsQuery.isError || signalsQuery.isError ? (
-        <ErrorState />
-      ) : isLoading ? (
-        <LoadingList count={4} />
-      ) : (
-        <div className="space-y-3">
-          {recommendations.map((exhibition) => (
-            <ExhibitionCard key={exhibition.id} exhibition={exhibition} day={today} />
-          ))}
-        </div>
-      )}
     </AppShell>
   );
 }
